@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 
 const Formulario = ({nuevoArriendo}) => {
 
+    
     const [id, setId] = useState(null);
     const [arrendantario, setArrendantario] = useState('');
     const [fechaInicio, setFechaInicio] = useState('');
