@@ -1,0 +1,13 @@
+.containerPrincipal{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.containerCalender{
+    background-color: white;
+    width: 800px;
+    padding: 20px;
+    margin: 30px;
+    border-radius: 10px;
+}

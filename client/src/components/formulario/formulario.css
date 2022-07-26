@@ -1,0 +1,28 @@
+.containerForm{
+    height: 100%;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.containerItem{
+    padding-top: 10px;
+    width: 300px;
+    flex-direction: column;
+    align-items: center;
+}
+
+.cardForm{
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.containerBtn{
+    padding: 5px;
+    display: flex;
+    justify-content: space-around;
+
+}
