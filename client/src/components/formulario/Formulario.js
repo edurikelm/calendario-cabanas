@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { Card, TextField, Button } from '@mui/material'
+import { Card, TextField, Button, Typography } from '@mui/material'
 
 import './formulario.css'
+import Detalle from '../detalle/Detalle';
 
-const Formulario = ({ selectEvent, getEventos }) => {
-
+const Formulario = ({ selectEvent, getEventos, setEdit }) => {
 
     const [id, setId] = useState(null);
     const [arrendantario, setArrendantario] = useState('');
@@ -17,8 +17,6 @@ const Formulario = ({ selectEvent, getEventos }) => {
     const [ubicacion, setUbicacion] = useState('');
     const [valorNoche, setValorNoche] = useState(0);
 
-
-    console.log(selectEvent);
 
     useEffect(() => {
         setArrendantario(selectEvent.titulo)
@@ -55,21 +53,23 @@ const Formulario = ({ selectEvent, getEventos }) => {
 
         localStorage.setItem('eventos', JSON.stringify(filterLocal))
         getEventos()
+        setEdit(false)
         // console.log(filterLocal);
     }
 
     return (
         <div className='containerForm'>
+            <Typography sx={{ fontSize: 20, fontWeight: 'bold', textAlign: 'center' }}>Editar Arriendo</Typography>
             <div className="containerItem">
-                <TextField type={'text'} placeholder='Arrendatario' onChange={e => setArrendantario(e.target.value)} value={arrendantario} />
-                <TextField type={'text'} placeholder='Fecha Entrada' onChange={e => setFechaInicio(e.target.value)} value={fechaInicio} />
-                <TextField type={'text'} placeholder='Fecha Salida' onChange={e => setFechaTermino(e.target.value)} value={fechaTermino} />
-                <TextField type={'text'} placeholder='Fecha Salida' onChange={e => setCabana(e.target.value)} value={cabana} />
-                <TextField type={'text'} placeholder='Fecha Salida' onChange={e => setCantPersonas(e.target.value)} value={cantPersonas} />
-                <TextField type={'text'} placeholder='Fecha Salida' onChange={e => setCelular(e.target.value)} value={celular} />
-                <TextField type={'text'} placeholder='Fecha Salida' onChange={e => setCorreo(e.target.value)} value={correo} />
-                <TextField type={'text'} placeholder='Fecha Salida' onChange={e => setUbicacion(e.target.value)} value={ubicacion} />
-                <TextField type={'text'} placeholder='Fecha Salida' onChange={e => setValorNoche(e.target.value)} value={valorNoche} />
+                <TextField size='small' variant="standard" type='text' label='Arrendatario' onChange={e => setArrendantario(e.target.value)} value={arrendantario} />
+                <TextField size='small' variant="standard" type='text' label='Fecha Entrada' onChange={e => setFechaInicio(e.target.value)} value={fechaInicio} />
+                <TextField size='small' variant="standard" type='text' label='Fecha Salida' onChange={e => setFechaTermino(e.target.value)} value={fechaTermino} />
+                <TextField size='small' variant="standard" type='text' label='Cabana' onChange={e => setCabana(e.target.value)} value={cabana} />
+                <TextField size='small' variant="standard" type='text' label='Cant. Personas' onChange={e => setCantPersonas(e.target.value)} value={cantPersonas} />
+                <TextField size='small' variant="standard" type='text' label='Celular' onChange={e => setCelular(e.target.value)} value={celular} />
+                <TextField size='small' variant="standard" type='text' label='Correo' onChange={e => setCorreo(e.target.value)} value={correo} />
+                <TextField size='small' variant="standard" type='text' label='Ubicacion' onChange={e => setUbicacion(e.target.value)} value={ubicacion} />
+                <TextField size='small' variant="standard" type='text' label='Precio x Noche' onChange={e => setValorNoche(e.target.value)} value={valorNoche} />
                 <div className="containerBtn">
                     <Button className='button' variant='contained' color='info' onClick={handleButton}>Editar</Button>
                 </div>

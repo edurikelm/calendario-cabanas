@@ -7,8 +7,19 @@ import { useEffect, useState } from 'react'
 import './calendario.css'
 import Detalle from '../detalle/Detalle'
 import { Card } from '@mui/material'
+import ModalForm from '../modalForm/ModalForm'
 
 const Calendario = () => {
+
+    const [infoSelected, setInfoSelected] = useState({
+        id: null,
+        fechaInicio: '',
+        fechaTermino: '',
+
+    });
+    const [open, setOpen] = useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
 
     const [selectEvent, setSelectEvent] = useState({
         id: null,
@@ -39,6 +50,7 @@ const Calendario = () => {
     return (
         <div className='containerPrincipal'>
             <Card className="containerCalender">
+                <ModalForm open={open} handleClose={handleClose} infoSelected={infoSelected} getEventos={getEventos} />
                 <FullCalender
                     events={eventos}
                     editable={true}
@@ -66,39 +78,47 @@ const Calendario = () => {
                         getEventos()
                     }}
                     select={(info) => {
-                        console.log(info)
-                        const result = prompt('Nombre arredador')
+                        handleOpen()
                         const num = Math.round(Math.random() * 65437)
-                        const evento = {
-                            id: num,
-                            title: result,
-                            start: info.startStr,
-                            end: info.endStr,
-                        }
 
-                        if (evento.title === null || evento.title === '') {
-                            return
-                        } else {
-                            eventos.push(evento)
-                            localStorage.setItem('eventos', JSON.stringify(eventos))
-                            getEventos()
-                        }
+                        setInfoSelected({
+                            id: num,
+                            fechaInicio: info.startStr,
+                            fechaTermino: info.endStr
+                        })
+
+                        // console.log(info)
+                        // const result = prompt('Nombre arredador')
+                        // const evento = {
+                        //     id: num,
+                        //     title: result,
+                        //     start: info.startStr,
+                        //     end: info.endStr,
+                        // }
+
+                        // if (evento.title === null || evento.title === '') {
+                        //     return
+                        // } else {
+                        //     eventos.push(evento)
+                        //     localStorage.setItem('eventos', JSON.stringify(eventos))
+                        //     getEventos()
+                        // }
 
                     }}
                     eventClick={(info) => {
-                        // console.log(info.event);
+                        console.log(info.event._def.extendedProps);
                         setSelectEvent({
                             id: info.event.id,
                             titulo: info.event.title,
                             fechaInicio: info.event.startStr,
                             fechaTermino: info.event.endStr,
-                            valorNoche: 20000,
-                            cabana: 'Cabana 1',
-                            ubicacion: 'Isla Teja',
-                            arrendatario: 'Gladys Mayorga',
-                            cantPersonas: 4,
-                            correo: 'gmayof@gmail.com',
-                            celular: '79579507'
+                            valorNoche: info.event._def.extendedProps.valorNoche,
+                            cabana: info.event._def.extendedProps.cabana,
+                            ubicacion: info.event._def.extendedProps.ubicacion,
+                            arrendatario: info.event._def.extendedProps.arrendatario,
+                            cantPersonas: info.event._def.extendedProps.cantPersonas,
+                            correo: info.event._def.extendedProps.correo,
+                            celular: info.event._def.extendedProps.celular
                         })
                     }}
                 />

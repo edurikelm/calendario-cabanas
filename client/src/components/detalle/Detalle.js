@@ -22,7 +22,7 @@ const Detalle = ({ selectEvent, getEventos }) => {
   return (
     <Card className='containerDetalle'>
       {
-        edit ? <Formulario selectEvent={selectEvent} getEventos={getEventos}/>
+        edit ? <Formulario selectEvent={selectEvent} getEventos={getEventos} setEdit={setEdit}/>
           : <CardContent className='containerInfo'>
             <div className='headerContainer'>
               <Typography sx={{ fontSize: 20, fontWeight: 'bold' }}>Detalle Arriendo</Typography>
@@ -63,7 +63,7 @@ const Detalle = ({ selectEvent, getEventos }) => {
             </div>
             <Divider />
             <div className='containerContacto'>
-              <Avatar sx={{ width: 56, height: 56 }} alt="Gladys Mayorga" src="/static/images/avatar/1.jpg" />
+              <Avatar sx={{ width: 56, height: 56 }} alt={`${selectEvent.titulo}`} src="/static/images/avatar/1.jpg" />
               <Typography sx={{ fontSize: 20, fontWeight: 'bold' }}>{selectEvent.titulo}</Typography>
             </div>
             <Divider />
