@@ -1,11 +1,12 @@
+import { useState } from 'react'
 import { Avatar, Button, ButtonGroup, Card, CardContent, Divider, IconButton, Typography } from '@mui/material'
 import WhatsApp from '@mui/icons-material/WhatsApp'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 
 import './detalle.css'
-import { useState } from 'react'
 import Formulario from '../formulario/Formulario'
+import { cantidadDiasArriendo, enviarMensajeWhatsapp, formatoPesos } from '../../helpers/funciones'
 
 const Detalle = ({ selectEvent, getEventos }) => {
 
@@ -19,6 +20,10 @@ const Detalle = ({ selectEvent, getEventos }) => {
     getEventos()
   }
 
+  const valorxNoche = formatoPesos(selectEvent.valorNoche)
+  const diasArriendo = cantidadDiasArriendo(selectEvent.fechaInicio, selectEvent.fechaTermino)
+  const costoTotalArriendo = formatoPesos(selectEvent.valorNoche*diasArriendo)
+  // console.log(costoTotalArriendo)
   return (
     <Card className='containerDetalle'>
       {
@@ -38,23 +43,22 @@ const Detalle = ({ selectEvent, getEventos }) => {
             <Divider />
             <div className='textDetalle'>
               <Typography sx={{ fontSize: 15 }}>{selectEvent.cabana}</Typography>
-              <Typography sx={{ fontSize: 12 }}>{selectEvent.ubicacion}</Typography>
-              <Typography sx={{ fontSize: 14, fontWeight: 'bold' }}>${selectEvent.valorNoche} / dia</Typography>
+              <Typography sx={{ fontSize: 14, fontWeight: 'bold' }}>{valorxNoche} / dia</Typography>
             </div>
             <Divider />
             <div className='containerCheck'>
               <Card className='check'>
                 <Typography sx={{ fontSize: 14, opacity: 0.4 }}>Ingreso</Typography>
-                <Typography sx={{ fontSize: 10, fontWeight: 'bold' }}>{selectEvent.fechaInicio}</Typography>
+                <Typography sx={{ fontSize: 12, fontWeight: 'bold' }}>{selectEvent.fechaInicio}</Typography>
               </Card>
               <Card className='check'>
                 <Typography sx={{ fontSize: 14, opacity: 0.4 }}>Salida</Typography>
-                <Typography sx={{ fontSize: 10, fontWeight: 'bold' }}>{selectEvent.fechaTermino}</Typography>
+                <Typography sx={{ fontSize: 12, fontWeight: 'bold' }}>{selectEvent.fechaTermino}</Typography>
               </Card>
             </div>
             <div className='constoTotal'>
               <Typography sx={{ fontSize: 15, }}>Costo Total</Typography>
-              <Typography sx={{ fontSize: 15, fontWeight: 'bold' }}>$100.000</Typography>
+              <Typography sx={{ fontSize: 15, fontWeight: 'bold' }}>{costoTotalArriendo === '$NaN' ? '$0' : costoTotalArriendo}</Typography>
             </div>
             <Divider />
             <div className='cantPersonas'>
@@ -72,7 +76,8 @@ const Detalle = ({ selectEvent, getEventos }) => {
               <div className='detalleInfoContacto'>
                 <Typography sx={{ fontSize: 12 }}>{selectEvent.correo}</Typography>
                 <Typography sx={{ fontSize: 12 }}>+56 9 {selectEvent.celular}</Typography>
-                <Button variant='contained' color='success' startIcon={<WhatsApp />}>Whatsapp</Button>
+                <Typography sx={{ fontSize: 12 }}>{selectEvent.ubicacion}</Typography>
+                <Button variant='contained' size='small'color='success' startIcon={<WhatsApp />} onClick={()=> enviarMensajeWhatsapp(`569${selectEvent.celular}`)}>Whatsapp</Button>
               </div>
             </div>
           </CardContent>}
