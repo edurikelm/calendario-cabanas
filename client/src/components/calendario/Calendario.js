@@ -10,11 +10,14 @@ import Detalle from '../detalle/Detalle'
 import { Card } from '@mui/material'
 import ModalForm from '../modalForm/ModalForm'
 import { sumarDias } from '../../helpers/funciones'
+import { getArriendos } from '../../helpers/funcionesFirebase'
 
 const Calendario = () => {
 
+    
+
     const [infoSelected, setInfoSelected] = useState({
-        id: null,
+        // id: null,
         fechaInicio: '',
         fechaTermino: '',
 
@@ -24,7 +27,7 @@ const Calendario = () => {
     const handleClose = () => setOpen(false);
 
     const [selectEvent, setSelectEvent] = useState({
-        id: null,
+        // id: null,
         titulo: '',
         fechaInicio: '',
         fechaTermino: '',
@@ -40,14 +43,14 @@ const Calendario = () => {
     const [eventos, setEventos] = useState([]);
 
     const getEventos = async () => {
-        const data = await JSON.parse(localStorage.getItem("eventos"));
+        const data = await getArriendos()
+        // const data = await JSON.parse(localStorage.getItem("eventos"));
         setEventos(data)
     }
 
     useEffect(() => {
         getEventos()
     }, [])
-
 
     return (
         <div className='containerPrincipal'>
@@ -66,7 +69,7 @@ const Calendario = () => {
                         // console.log(info.event)
                         const filtro = eventos.filter(item => item.id != info.event.id)
                         filtro.push({
-                            id: info.event.id,
+                            // id: info.event.id,
                             title: info.event.title,
                             start: info.event.startStr,
                             end: info.event.endStr,
@@ -83,10 +86,10 @@ const Calendario = () => {
                     }}
                     select={(info) => {
                         handleOpen()
-                        const num = Math.round(Math.random() * 65437)
+                        // const num = Math.round(Math.random() * 65437)
 
                         setInfoSelected({
-                            id: num,
+                            // id: num,
                             fechaInicio: info.startStr,
                             fechaTermino: info.endStr
                         })
@@ -115,7 +118,7 @@ const Calendario = () => {
                         const fecha = format(info.event.end, 'yyyy-MM-dd')
 
                         setSelectEvent({
-                            id: info.event.id,
+                            // id: info.event.id,
                             titulo: info.event.title,
                             fechaInicio: info.event.startStr,
                             fechaTermino: fecha,

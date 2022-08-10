@@ -32,3 +32,9 @@
 .inputEdit{
     height: 30px;
 }
+
+.cerrarEditar{
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}

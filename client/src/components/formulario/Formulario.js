@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
-import { Card, TextField, Button, Typography } from '@mui/material'
+import { TextField, Button, Typography, IconButton } from '@mui/material'
+import CloseIcon from '@mui/icons-material/Close'
 
 import './formulario.css'
-import Detalle from '../detalle/Detalle';
 
 const Formulario = ({ selectEvent, getEventos, setEdit }) => {
 
@@ -59,6 +59,11 @@ const Formulario = ({ selectEvent, getEventos, setEdit }) => {
 
     return (
         <div className='containerForm'>
+            <div className='cerrarEditar'>
+                <IconButton aria-label="close" onClick={() => setEdit(false)}>
+                    <CloseIcon />
+                </IconButton>
+            </div>
             <Typography sx={{ fontSize: 20, fontWeight: 'bold', textAlign: 'center' }}>Editar Arriendo</Typography>
             <div className="containerItem">
                 <TextField size='small' variant="standard" type='text' label='Arrendatario' onChange={e => setArrendantario(e.target.value)} value={arrendantario} />

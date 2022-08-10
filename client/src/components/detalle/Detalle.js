@@ -3,6 +3,7 @@ import { Avatar, Button, ButtonGroup, Card, CardContent, Divider, IconButton, Ty
 import WhatsApp from '@mui/icons-material/WhatsApp'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
+import HouseIcon from '@mui/icons-material/House'
 
 import './detalle.css'
 import Formulario from '../formulario/Formulario'
@@ -42,6 +43,7 @@ const Detalle = ({ selectEvent, getEventos }) => {
             </div>
             <Divider />
             <div className='textDetalle'>
+              <HouseIcon />
               <Typography sx={{ fontSize: 15 }}>{selectEvent.cabana}</Typography>
               <Typography sx={{ fontSize: 14, fontWeight: 'bold' }}>{valorxNoche} / dia</Typography>
             </div>

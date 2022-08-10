@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Box, Button, Modal, TextField, Typography } from '@mui/material';
+import { postArriendo } from '../../helpers/funcionesFirebase';
 
 const style = {
     position: 'absolute',
@@ -23,12 +24,12 @@ const ModalForm = ({ open, handleClose, infoSelected, getEventos }) => {
     const [ubicacion, setUbicacion] = useState('');
     const [valorNoche, setValorNoche] = useState(0);
     
-    const local = JSON.parse(localStorage.getItem('eventos'))
+    // const local = JSON.parse(localStorage.getItem('eventos'))
 
     const handleNuevoBtn = () => {
 
         const data = {
-            id: infoSelected.id,
+            // id: infoSelected.id,
             title: arrendantario,
             start: infoSelected.fechaInicio,
             end: infoSelected.fechaTermino,
@@ -40,11 +41,13 @@ const ModalForm = ({ open, handleClose, infoSelected, getEventos }) => {
             valorNoche: valorNoche,
         }
 
-        local.push(data)
-        // console.log(local);
-        localStorage.setItem('eventos', JSON.stringify(local))
+        postArriendo(data)
         handleClose()
         getEventos()
+
+        // local.push(data)
+        // console.log(local);
+        // localStorage.setItem('eventos', JSON.stringify(local))
 
     }
 
