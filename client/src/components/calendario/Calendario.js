@@ -17,7 +17,6 @@ const Calendario = () => {
     
 
     const [infoSelected, setInfoSelected] = useState({
-        // id: null,
         fechaInicio: '',
         fechaTermino: '',
 
@@ -27,7 +26,7 @@ const Calendario = () => {
     const handleClose = () => setOpen(false);
 
     const [selectEvent, setSelectEvent] = useState({
-        // id: null,
+        id: null,
         titulo: '',
         fechaInicio: '',
         fechaTermino: '',
@@ -44,7 +43,6 @@ const Calendario = () => {
 
     const getEventos = async () => {
         const data = await getArriendos()
-        // const data = await JSON.parse(localStorage.getItem("eventos"));
         setEventos(data)
     }
 
@@ -64,7 +62,6 @@ const Calendario = () => {
                     initialView='dayGridMonth'
                     locale={esLocale}
                     selectable={true}
-                    // select={(info) => prompt('selected ' + info.startStr + ' to ' + info.endStr) }
                     eventDrop={(info) => {
                         // console.log(info.event)
                         const filtro = eventos.filter(item => item.id != info.event.id)
@@ -86,39 +83,19 @@ const Calendario = () => {
                     }}
                     select={(info) => {
                         handleOpen()
-                        // const num = Math.round(Math.random() * 65437)
-
                         setInfoSelected({
-                            // id: num,
                             fechaInicio: info.startStr,
                             fechaTermino: info.endStr
                         })
-                        
-                        // console.log(info)
-                        // const result = prompt('Nombre arredador')
-                        // const evento = {
-                        //     id: num,
-                        //     title: result,
-                        //     start: info.startStr,
-                        //     end: info.endStr,
-                        // }
-
-                        // if (evento.title === null || evento.title === '') {
-                        //     return
-                        // } else {
-                        //     eventos.push(evento)
-                        //     localStorage.setItem('eventos', JSON.stringify(eventos))
-                        //     getEventos()
-                        // }
 
                     }}
                     eventClick={(info) => {
-                        // console.log(info.event.end);
+                        // console.log(info.event);
                         const fechaFinal = sumarDias(info.event.end)
                         const fecha = format(info.event.end, 'yyyy-MM-dd')
 
                         setSelectEvent({
-                            // id: info.event.id,
+                            id: info.event.id,
                             titulo: info.event.title,
                             fechaInicio: info.event.startStr,
                             fechaTermino: fecha,

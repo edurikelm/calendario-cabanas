@@ -1,4 +1,4 @@
-import { collection, addDoc, getDoc, getDocs } from 'firebase/firestore'
+import { doc, collection, addDoc, deleteDoc, getDocs, updateDoc } from 'firebase/firestore'
 import { db } from "../firebase"
 
 export const postArriendo = async (data) => {
@@ -19,10 +19,16 @@ export const getArriendos = async () => {
     return data
 }
 
-export const putArriendo = async (id) => {
+export const deleteArriendo = async (id) => {
 
-    const querySnapshot = await getDocs(collection(db, 'arriendos'))
+    const querySnapshot = await deleteDoc(doc(db, 'arriendos',id))
 
+    return querySnapshot
+}
 
-    return 
+export const editArriendo = async (id, data) => {
+
+    const res = updateDoc(doc(db, 'arriendos', id), data)
+
+    return res
 }

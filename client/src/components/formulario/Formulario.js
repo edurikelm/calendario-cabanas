@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { TextField, Button, Typography, IconButton } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 
+import { editArriendo } from '../../helpers/funcionesFirebase'
+
 import './formulario.css'
 
 const Formulario = ({ selectEvent, getEventos, setEdit }) => {
@@ -31,10 +33,7 @@ const Formulario = ({ selectEvent, getEventos, setEdit }) => {
         setCorreo(selectEvent.correo)
     }, [selectEvent])
 
-    const local = JSON.parse(localStorage.getItem('eventos'))
-    const filterLocal = local.filter(item => item.id != selectEvent.id)
-
-    const handleButton = () => {
+    const handleButton = async () => {
 
         const data = {
             id: id,
@@ -49,9 +48,7 @@ const Formulario = ({ selectEvent, getEventos, setEdit }) => {
             valorNoche: valorNoche,
         }
 
-        filterLocal.push(data)
-
-        localStorage.setItem('eventos', JSON.stringify(filterLocal))
+        await editArriendo(selectEvent.id, data)
         getEventos()
         setEdit(false)
         // console.log(filterLocal);

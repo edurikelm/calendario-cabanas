@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Avatar, Button, ButtonGroup, Card, CardContent, Divider, IconButton, Typography } from '@mui/material'
 import WhatsApp from '@mui/icons-material/WhatsApp'
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -8,23 +8,21 @@ import HouseIcon from '@mui/icons-material/House'
 import './detalle.css'
 import Formulario from '../formulario/Formulario'
 import { cantidadDiasArriendo, enviarMensajeWhatsapp, formatoPesos } from '../../helpers/funciones'
+import { deleteArriendo } from '../../helpers/funcionesFirebase'
 
 const Detalle = ({ selectEvent, getEventos }) => {
 
   const [edit, setEdit] = useState(false);
 
-  const local = JSON.parse(localStorage.getItem('eventos'))
-  const filterLocal = local.filter(item => item.id != selectEvent.id)
-
-  const deleteBtn = () => {
-    localStorage.setItem('eventos', JSON.stringify(filterLocal))
+  const deleteBtn = async () => {
+    await deleteArriendo(selectEvent.id)
     getEventos()
   }
 
   const valorxNoche = formatoPesos(selectEvent.valorNoche)
   const diasArriendo = cantidadDiasArriendo(selectEvent.fechaInicio, selectEvent.fechaTermino)
   const costoTotalArriendo = formatoPesos(selectEvent.valorNoche*diasArriendo)
-  // console.log(costoTotalArriendo)
+
   return (
     <Card className='containerDetalle'>
       {
