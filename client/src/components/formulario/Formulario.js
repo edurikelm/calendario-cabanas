@@ -6,9 +6,8 @@ import { editArriendo } from '../../helpers/funcionesFirebase'
 
 import './formulario.css'
 
-const Formulario = ({ selectEvent, getEventos, setEdit }) => {
+const Formulario = ({ selectEvent, getEventos, setEdit, setSelectEvent }) => {
 
-    const [id, setId] = useState(null);
     const [arrendantario, setArrendantario] = useState('');
     const [fechaInicio, setFechaInicio] = useState('');
     const [fechaTermino, setFechaTermino] = useState('');
@@ -21,10 +20,9 @@ const Formulario = ({ selectEvent, getEventos, setEdit }) => {
 
 
     useEffect(() => {
-        setArrendantario(selectEvent.titulo)
-        setFechaInicio(selectEvent.fechaInicio)
-        setFechaTermino(selectEvent.fechaTermino)
-        setId(Number(selectEvent.id))
+        setArrendantario(selectEvent.title)
+        setFechaInicio(selectEvent.start)
+        setFechaTermino(selectEvent.end)
         setCabana(selectEvent.cabana)
         setCantPersonas(selectEvent.cantPersonas)
         setCelular(selectEvent.celular)
@@ -36,7 +34,6 @@ const Formulario = ({ selectEvent, getEventos, setEdit }) => {
     const handleButton = async () => {
 
         const data = {
-            id: id,
             title: arrendantario,
             start: fechaInicio,
             end: fechaTermino,
@@ -49,6 +46,7 @@ const Formulario = ({ selectEvent, getEventos, setEdit }) => {
         }
 
         await editArriendo(selectEvent.id, data)
+        setSelectEvent(data)
         getEventos()
         setEdit(false)
         // console.log(filterLocal);

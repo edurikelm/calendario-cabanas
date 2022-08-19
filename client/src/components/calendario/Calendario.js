@@ -9,16 +9,14 @@ import './calendario.css'
 import Detalle from '../detalle/Detalle'
 import { Card } from '@mui/material'
 import ModalForm from '../modalForm/ModalForm'
-import { sumarDias } from '../../helpers/funciones'
-import { getArriendos } from '../../helpers/funcionesFirebase'
+// import { sumarDias } from '../../helpers/funciones'
+import { editArriendo, getArriendos } from '../../helpers/funcionesFirebase'
 
 const Calendario = () => {
 
-    
-
     const [infoSelected, setInfoSelected] = useState({
-        fechaInicio: '',
-        fechaTermino: '',
+        start: '',
+        end: '',
 
     });
     const [open, setOpen] = useState(false);
@@ -27,16 +25,15 @@ const Calendario = () => {
 
     const [selectEvent, setSelectEvent] = useState({
         id: null,
-        titulo: '',
-        fechaInicio: '',
-        fechaTermino: '',
+        title: '',
+        start: '',
+        end: '',
         valorNoche: 0,
         cabana: '',
         ubicacion: '',
-        arrendatario: '',
         cantPersonas: 0,
         correo: '',
-        celular: ''
+        celular: '',
     });
 
     const [eventos, setEventos] = useState([]);
@@ -62,23 +59,14 @@ const Calendario = () => {
                     initialView='dayGridMonth'
                     locale={esLocale}
                     selectable={true}
-                    eventDrop={(info) => {
-                        // console.log(info.event)
-                        const filtro = eventos.filter(item => item.id != info.event.id)
-                        filtro.push({
-                            // id: info.event.id,
-                            title: info.event.title,
+                    eventDrop={async (info) => {
+
+                        const data = {
                             start: info.event.startStr,
                             end: info.event.endStr,
-                            valorNoche: info.event._def.extendedProps.valorNoche,
-                            cabana: info.event._def.extendedProps.cabana,
-                            ubicacion: info.event._def.extendedProps.ubicacion,
-                            arrendatario: info.event._def.extendedProps.arrendatario,
-                            cantPersonas: info.event._def.extendedProps.cantPersonas,
-                            correo: info.event._def.extendedProps.correo,
-                            celular: info.event._def.extendedProps.celular
-                        })
-                        localStorage.setItem('eventos', JSON.stringify(filtro))
+                        }
+                        
+                        await editArriendo(info.event.id, data)
                         getEventos()
                     }}
                     select={(info) => {
@@ -91,27 +79,27 @@ const Calendario = () => {
                     }}
                     eventClick={(info) => {
                         // console.log(info.event);
-                        const fechaFinal = sumarDias(info.event.end)
+                        // const fechaFinal = sumarDias(info.event.end)
                         const fecha = format(info.event.end, 'yyyy-MM-dd')
 
                         setSelectEvent({
                             id: info.event.id,
-                            titulo: info.event.title,
-                            fechaInicio: info.event.startStr,
-                            fechaTermino: fecha,
+                            title: info.event.title,
+                            start: info.event.startStr,
+                            end: fecha,
                             valorNoche: info.event._def.extendedProps.valorNoche,
                             cabana: info.event._def.extendedProps.cabana,
                             ubicacion: info.event._def.extendedProps.ubicacion,
-                            arrendatario: info.event._def.extendedProps.arrendatario,
                             cantPersonas: info.event._def.extendedProps.cantPersonas,
                             correo: info.event._def.extendedProps.correo,
-                            celular: info.event._def.extendedProps.celular
+                            celular: info.event._def.extendedProps.celular,
+                            pago: info.event._def.extendedProps.pago
                         })
                     }}
                 />
             </Card>
             {/* <Formulario nuevoArriendo={nuevoArriendo} getEventos={getEventos}/> */}
-            <Detalle selectEvent={selectEvent} getEventos={getEventos} />
+            <Detalle selectEvent={selectEvent} getEventos={getEventos} setSelectEvent={setSelectEvent}/>
         </div>
     )
 }

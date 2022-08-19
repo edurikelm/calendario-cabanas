@@ -36,6 +36,7 @@ const ModalForm = ({ open, handleClose, infoSelected, getEventos }) => {
             correo: correo,
             ubicacion: ubicacion,
             valorNoche: valorNoche,
+            pago: false
         }
 
         postArriendo(data)
