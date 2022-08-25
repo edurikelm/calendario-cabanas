@@ -23,18 +23,7 @@ const Calendario = () => {
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
-    const [selectEvent, setSelectEvent] = useState({
-        id: null,
-        title: '',
-        start: '',
-        end: '',
-        valorNoche: 0,
-        cabana: '',
-        ubicacion: '',
-        cantPersonas: 0,
-        correo: '',
-        celular: '',
-    });
+    const [selectEvent, setSelectEvent] = useState({});
 
     const [eventos, setEventos] = useState([]);
 

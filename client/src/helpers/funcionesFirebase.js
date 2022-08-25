@@ -13,7 +13,13 @@ export const getArriendos = async () => {
     const querySnapshot = await getDocs(collection(db, 'arriendos'))
 
     querySnapshot.forEach((doc) => {
-        data.push({...doc.data(), id: doc.id})
+
+        if (doc.data().pago === false) {
+
+            return data.push({ ...doc.data(), id: doc.id, color: 'red' })
+
+        }
+        return data.push({ ...doc.data(), id: doc.id })
     })
 
     return data
@@ -21,7 +27,7 @@ export const getArriendos = async () => {
 
 export const deleteArriendo = async (id) => {
 
-    const querySnapshot = await deleteDoc(doc(db, 'arriendos',id))
+    const querySnapshot = await deleteDoc(doc(db, 'arriendos', id))
 
     return querySnapshot
 }

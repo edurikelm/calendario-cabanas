@@ -6,6 +6,9 @@ import EditIcon from '@mui/icons-material/Edit'
 import HouseIcon from '@mui/icons-material/House'
 import DoneIcon from '@mui/icons-material/Done'
 import CloseIcon from '@mui/icons-material/Close'
+import MailIcon from '@mui/icons-material/Mail'
+import PhoneIcon from '@mui/icons-material/Phone'
+import LocationOnIcon from '@mui/icons-material/LocationOn'
 
 import './detalle.css'
 
@@ -34,15 +37,19 @@ const Detalle = ({ selectEvent, getEventos, setSelectEvent }) => {
     getEventos()
   }
 
+
+
   useEffect(()=>{
     setPagado(selectEvent.pago)
   },[selectEvent.pago])
+
+  
 
   return (
     <Card className='containerDetalle'>
       {
         edit ? <Formulario selectEvent={selectEvent} getEventos={getEventos} setEdit={setEdit} setSelectEvent={setSelectEvent}/>
-          : <CardContent className='containerInfo'>
+          : Object.keys(selectEvent).length === 0 ? <Typography sx={{ fontSize: 20, fontWeight: 'bold', margin: 5, textAlign:'center' }}>Seleccione un evento para ver el detalle</Typography> : <CardContent className='containerInfo'>
             <div className='headerContainer'>
               <Typography sx={{ fontSize: 20, fontWeight: 'bold' }}>Detalle Arriendo</Typography>
               <ButtonGroup>
@@ -98,9 +105,9 @@ const Detalle = ({ selectEvent, getEventos, setSelectEvent }) => {
             <div className='containerInfoContacto'>
               <Typography sx={{ fontSize: 15, fontWeight: 'bold' }}>Contacto info</Typography>
               <div className='detalleInfoContacto'>
-                <Typography sx={{ fontSize: 12 }}>{selectEvent.correo}</Typography>
-                <Typography sx={{ fontSize: 12 }}>+56 9 {selectEvent.celular}</Typography>
-                <Typography sx={{ fontSize: 12 }}>{selectEvent.ubicacion}</Typography>
+                <Typography sx={{ fontSize: 12, display: 'flex', gap: 0.5 }}><MailIcon fontSize='small' sx={{fontSize: 15}}/>{selectEvent.correo}</Typography>
+                <Typography sx={{ fontSize: 12, display: 'flex', gap: 0.5 }}><PhoneIcon fontSize='small' sx={{fontSize: 15}}/>+56 9 {selectEvent.celular}</Typography>
+                <Typography sx={{ fontSize: 12, display: 'flex', gap: 0.5 }}><LocationOnIcon fontSize='small' sx={{fontSize: 15}}/>{selectEvent.ubicacion}</Typography>
                 <Button variant='contained' size='small' color='success' startIcon={<WhatsApp />} onClick={() => enviarMensajeWhatsapp(`569${selectEvent.celular}`)}>Whatsapp</Button>
               </div>
             </div>
