@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import FullCalender from '@fullcalendar/react'
 import interactionPlugin from '@fullcalendar/interaction'
 import dayGridPlugin from '@fullcalendar/daygrid'
+import listPlugin from '@fullcalendar/list'
 import esLocale from '@fullcalendar/core/locales/es'
 import { format } from 'date-fns';
 
@@ -44,17 +45,27 @@ const Calendario = () => {
                     events={eventos}
                     editable={true}
                     contentHeight='550px'
-                    plugins={[interactionPlugin, dayGridPlugin]}
-                    initialView='dayGridMonth'
+                    plugins={[interactionPlugin, dayGridPlugin, listPlugin]}
                     locale={esLocale}
                     selectable={true}
+                    headerToolbar={{
+                        left:'title',
+                        center: '',
+                        right: 'prev,next today dayGridMonth,listaBtn'
+                    }}
+                    views={{
+                        listaBtn:{
+                            type: 'listMonth',
+                            buttonText: 'Lista'
+                        }
+                    }}
                     eventDrop={async (info) => {
 
                         const data = {
                             start: info.event.startStr,
                             end: info.event.endStr,
                         }
-                        
+
                         await editArriendo(info.event.id, data)
                         getEventos()
                     }}
@@ -88,7 +99,7 @@ const Calendario = () => {
                 />
             </Card>
             {/* <Formulario nuevoArriendo={nuevoArriendo} getEventos={getEventos}/> */}
-            <Detalle selectEvent={selectEvent} getEventos={getEventos} setSelectEvent={setSelectEvent}/>
+            <Detalle selectEvent={selectEvent} getEventos={getEventos} setSelectEvent={setSelectEvent} />
         </div>
     )
 }
