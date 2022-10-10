@@ -30,7 +30,23 @@ const Calendario = () => {
 
     const getEventos = async () => {
         const data = await getArriendos()
-        setEventos(data)
+        const nuevaData = data.map(item => {
+            return {
+                title: `${item.title} (${item.cabana})`,
+                id: item.id,
+                start: item.start,
+                end: item.end,
+                valorNoche: item.valorNoche,
+                cabana: item.cabana,
+                ubicacion: item.ubicacion,
+                cantPersonas: item.cantPersonas,
+                correo: item.correo,
+                celular: item.celular,
+                pago: item.pago,
+                color: item.color
+            }
+        })
+        setEventos(nuevaData)
     }
 
     useEffect(() => {
@@ -49,12 +65,12 @@ const Calendario = () => {
                     locale={esLocale}
                     selectable={true}
                     headerToolbar={{
-                        left:'title',
+                        left: 'title',
                         center: '',
                         right: 'prev,next today dayGridMonth,listaBtn'
                     }}
                     views={{
-                        listaBtn:{
+                        listaBtn: {
                             type: 'listMonth',
                             buttonText: 'Lista'
                         }
@@ -81,10 +97,20 @@ const Calendario = () => {
                         // console.log(info.event);
                         // const fechaFinal = sumarDias(info.event.end)
                         const fecha = format(info.event.end, 'yyyy-MM-dd')
-
+                        let nuevoArreglo = []
+                        const tituloCabanaArreglo = info.event.title.split(" ")
+                        tituloCabanaArreglo.length = tituloCabanaArreglo.length - 2
+                        for (let i = 0; i < tituloCabanaArreglo.length; i++) {
+                            const element = tituloCabanaArreglo[i];
+                            nuevoArreglo.push(element)
+                            
+                        }
+                        
+                        // const nuevaCabana = tituloCabanaArreglo[1] + " " + tituloCabanaArreglo[2]
+                        const nuevaTitlo = nuevoArreglo.toString().replace(/,/g," ")
                         setSelectEvent({
                             id: info.event.id,
-                            title: info.event.title,
+                            title: nuevaTitlo,
                             start: info.event.startStr,
                             end: fecha,
                             valorNoche: info.event._def.extendedProps.valorNoche,
