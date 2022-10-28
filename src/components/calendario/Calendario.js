@@ -10,8 +10,10 @@ import './calendario.css'
 import Detalle from '../detalle/Detalle'
 import { Card } from '@mui/material'
 import ModalForm from '../modalForm/ModalForm'
+import Filtro from '../filtro/Filtro'
 // import { sumarDias } from '../../helpers/funciones'
 import { editArriendo, getArriendos } from '../../helpers/funcionesFirebase'
+import { ordenarDataArriendos } from '../../helpers/funciones'
 
 const Calendario = () => {
 
@@ -30,22 +32,7 @@ const Calendario = () => {
 
     const getEventos = async () => {
         const data = await getArriendos()
-        const nuevaData = data.map(item => {
-            return {
-                title: `${item.title} (${item.cabana})`,
-                id: item.id,
-                start: item.start,
-                end: item.end,
-                valorNoche: item.valorNoche,
-                cabana: item.cabana,
-                ubicacion: item.ubicacion,
-                cantPersonas: item.cantPersonas,
-                correo: item.correo,
-                celular: item.celular,
-                pago: item.pago,
-                color: item.color
-            }
-        })
+        const nuevaData = ordenarDataArriendos(data)
         setEventos(nuevaData)
     }
 
@@ -56,6 +43,7 @@ const Calendario = () => {
     return (
         <div className='containerPrincipal'>
             <Card className="containerCalender">
+                <Filtro setEventos={setEventos} eventos={eventos}/>
                 <ModalForm open={open} handleClose={handleClose} infoSelected={infoSelected} getEventos={getEventos} />
                 <FullCalender
                     events={eventos}
