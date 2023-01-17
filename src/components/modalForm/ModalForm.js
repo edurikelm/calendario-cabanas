@@ -24,7 +24,7 @@ const ModalForm = ({ open, handleClose, infoSelected, getEventos }) => {
     const [ubicacion, setUbicacion] = useState('');
     const [valorNoche, setValorNoche] = useState(0);
     
-    const handleNuevoBtn = () => {
+    const handleNuevoBtn = async () => {
 
         const data = {
             title: arrendantario,
@@ -39,7 +39,7 @@ const ModalForm = ({ open, handleClose, infoSelected, getEventos }) => {
             pago: false
         }
 
-        postArriendo(data)
+        await postArriendo(data)
         handleClose()
         getEventos()
     }

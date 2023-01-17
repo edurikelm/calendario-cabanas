@@ -16,6 +16,8 @@ const Formulario = ({ selectEvent, getEventos, setEdit, setSelectEvent }) => {
     const [celular, setCelular] = useState('');
     const [correo, setCorreo] = useState('');
     const [ubicacion, setUbicacion] = useState('');
+    const [id, setId] = useState('');
+    const [pagado, setPagado] = useState('');
     const [valorNoche, setValorNoche] = useState(0);
 
 
@@ -29,11 +31,14 @@ const Formulario = ({ selectEvent, getEventos, setEdit, setSelectEvent }) => {
         setUbicacion(selectEvent.ubicacion)
         setValorNoche(selectEvent.valorNoche)
         setCorreo(selectEvent.correo)
+        setId(selectEvent.id)
+        setPagado(selectEvent.pago)
     }, [selectEvent])
 
     const handleButton = async () => {
 
         const data = {
+            id: id,
             title: arrendantario,
             start: fechaInicio,
             end: fechaTermino,
@@ -41,6 +46,7 @@ const Formulario = ({ selectEvent, getEventos, setEdit, setSelectEvent }) => {
             cantPersonas: cantPersonas,
             celular: celular,
             correo: correo,
+            pago: pagado,
             ubicacion: ubicacion,
             valorNoche: valorNoche,
         }

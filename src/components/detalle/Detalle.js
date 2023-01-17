@@ -24,6 +24,8 @@ const Detalle = ({ selectEvent, getEventos, setSelectEvent }) => {
 
   const deleteBtn = async () => {
     await deleteArriendo(selectEvent.id)
+    // setEdit(false)
+    setSelectEvent("")
     getEventos()
   }
 
