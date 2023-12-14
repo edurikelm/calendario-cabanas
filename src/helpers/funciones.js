@@ -1,4 +1,5 @@
 import { differenceInDays } from 'date-fns';
+import { getArriendos } from './funcionesFirebase';
 
 export const sumarDias = (fecha, dias) => {
     // console.log(fecha)
@@ -35,6 +36,9 @@ export const ordenarDataArriendos = (arriendos) => {
             case 'Teja Dos':
                 data.push({ ...item, title: `${item.title} (${item.cabana})`, color: '#963D5A' })
                 break;
+            case 'Teja Tres':
+                data.push({ ...item, title: `${item.title} (${item.cabana})`, color: '#c828f0' })
+                break;  
             case 'Regional Uno':
                 data.push({ ...item, title: `${item.title} (${item.cabana})`, color: '#1D4E89' })
                 break;
@@ -44,6 +48,9 @@ export const ordenarDataArriendos = (arriendos) => {
                 break;
             case 'Regional Tres':
                 data.push({ ...item, title: `${item.title} (${item.cabana})`, color: '#D5C7BC' })
+                break;
+            case 'Regional Cuatro':
+                data.push({ ...item, title: `${item.title} (${item.cabana})`, color: '#489600' })
                 break;
 
             default:
@@ -55,4 +62,13 @@ export const ordenarDataArriendos = (arriendos) => {
     })
 
     return data
+}
+
+export const sumarIngresos = async () => {
+    
+    const suma = 0
+    const data = await getArriendos()
+    const dataValorNoche = data.map(item => Number(item.valorNoche))
+    const reduceData = dataValorNoche.reduce((a,b) => a + b, suma )
+    return reduceData
 }

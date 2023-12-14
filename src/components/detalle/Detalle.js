@@ -16,7 +16,7 @@ import Formulario from '../formulario/Formulario'
 import { cantidadDiasArriendo, enviarMensajeWhatsapp, formatoPesos } from '../../helpers/funciones'
 import { deleteArriendo, editArriendo } from '../../helpers/funcionesFirebase'
 
-const Detalle = ({ selectEvent, getEventos, setSelectEvent }) => {
+const Detalle = ({ selectEvent, getEventos, setSelectEvent, recuperarIngresoTotal }) => {
 
   const [edit, setEdit] = useState(false);
   const [pagado, setPagado] = useState(false);
@@ -27,6 +27,7 @@ const Detalle = ({ selectEvent, getEventos, setSelectEvent }) => {
     // setEdit(false)
     setSelectEvent("")
     getEventos()
+    recuperarIngresoTotal()
   }
 
   const valorxNoche = formatoPesos(selectEvent.valorNoche)
@@ -50,7 +51,7 @@ const Detalle = ({ selectEvent, getEventos, setSelectEvent }) => {
   return (
     <Card className='containerDetalle'>
       {
-        edit ? <Formulario selectEvent={selectEvent} getEventos={getEventos} setEdit={setEdit} setSelectEvent={setSelectEvent}/>
+        edit ? <Formulario selectEvent={selectEvent} getEventos={getEventos} setEdit={setEdit} setSelectEvent={setSelectEvent} recuperarIngresoTotal={recuperarIngresoTotal}/>
           : Object.keys(selectEvent).length === 0 ? <Typography sx={{ fontSize: 20, fontWeight: 'bold', margin: 5, textAlign:'center' }}>Seleccione un evento para ver el detalle</Typography> : <CardContent className='containerInfo'>
             <div className='headerContainer'>
               <Typography sx={{ fontSize: 20, fontWeight: 'bold' }}>Detalle Arriendo</Typography>

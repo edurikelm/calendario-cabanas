@@ -24,7 +24,7 @@ const style = {
   p: 4,
 };
 
-const ModalForm = ({ open, handleClose, infoSelected, getEventos }) => {
+const ModalForm = ({ open, handleClose, infoSelected, getEventos, recuperarIngresoTotal }) => {
   const [arrendantario, setArrendantario] = useState('');
   const [cabana, setCabana] = useState('');
   const [cantPersonas, setCantPersonas] = useState(0);
@@ -32,8 +32,12 @@ const ModalForm = ({ open, handleClose, infoSelected, getEventos }) => {
   const [correo, setCorreo] = useState('');
   const [ubicacion, setUbicacion] = useState('');
   const [valorNoche, setValorNoche] = useState(0);
+  const [error, setError] = useState('');
 
   const handleNuevoBtn = async () => {
+    if (cabana === '') {
+      return setError('Debe seleccionar una cabana');
+    }
     const data = {
       title: arrendantario,
       start: infoSelected.fechaInicio,
@@ -50,7 +54,20 @@ const ModalForm = ({ open, handleClose, infoSelected, getEventos }) => {
     await postArriendo(data);
     handleClose();
     getEventos();
+    recuperarIngresoTotal()
   };
+
+  const handleChangeCabana = (e) => {
+    setCabana(e.target.value)
+    setError('')
+  }
+
+  const MsgError = () => {
+    return(
+      <span style={{color: 'red'}}>{error}</span>
+    )
+
+  }
 
   return (
     <div>
@@ -105,16 +122,19 @@ const ModalForm = ({ open, handleClose, infoSelected, getEventos }) => {
                 labelId="demo-simple-select-standard-label"
                 id="demo-simple-select-standard"
                 value={cabana}
-                onChange={(e) => setCabana(e.target.value)}
+                onChange={handleChangeCabana}
                 label="Age"
               >
                 <MenuItem value="Regional Uno">Regional Uno</MenuItem>
                 <MenuItem value="Regional Dos">Regional Dos</MenuItem>
                 <MenuItem value="Regional Tres">Regional Tres</MenuItem>
+                <MenuItem value="Regional Cuatro">Regional Cuatro</MenuItem>
                 <MenuItem value="Teja Uno">Teja Uno</MenuItem>
                 <MenuItem value="Teja Dos">Teja Dos</MenuItem>
+                <MenuItem value="Teja Tres">Teja Tres</MenuItem>
               </Select>
             </FormControl>
+            <MsgError/>
             <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
               <TextField
                 size="small"

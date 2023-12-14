@@ -6,7 +6,7 @@ import { editArriendo } from '../../helpers/funcionesFirebase'
 
 import './formulario.css'
 
-const Formulario = ({ selectEvent, getEventos, setEdit, setSelectEvent }) => {
+const Formulario = ({ selectEvent, getEventos, setEdit, setSelectEvent, recuperarIngresoTotal }) => {
 
     const [arrendantario, setArrendantario] = useState('');
     const [fechaInicio, setFechaInicio] = useState('');
@@ -55,6 +55,7 @@ const Formulario = ({ selectEvent, getEventos, setEdit, setSelectEvent }) => {
         setSelectEvent(data)
         getEventos()
         setEdit(false)
+        recuperarIngresoTotal()
         // console.log(filterLocal);
     }
 
