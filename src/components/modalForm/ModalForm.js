@@ -11,6 +11,7 @@ import {
   Typography,
 } from '@mui/material';
 import { postArriendo } from '../../helpers/funcionesFirebase';
+import { cantidadDiasArriendo } from '../../helpers/funciones';
 
 const style = {
   position: 'absolute',
@@ -49,6 +50,7 @@ const ModalForm = ({ open, handleClose, infoSelected, getEventos, recuperarIngre
       ubicacion: ubicacion,
       valorNoche: valorNoche,
       pago: false,
+      cantDias: cantidadDiasArriendo(infoSelected.fechaInicio, infoSelected.fechaTermino)
     };
 
     await postArriendo(data);
