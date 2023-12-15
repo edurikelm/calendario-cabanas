@@ -206,7 +206,7 @@ const ModalForm = ({ open, handleClose, infoSelected, getEventos, recuperarIngre
             </FormControl>
             <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }} style={{display: 'flex', flexDirection:'row', justifyContent:'center', alignItems:'center'}}>
             <Checkbox onChange={() => !dataInput.descuento ? setDataInput({...dataInput, descuento:true}) : setDataInput({...dataInput, descuento:false})}/>
-            <label htmlFor="">30% Gringo</label>
+            <label htmlFor="">20% Gringo</label>
             </FormControl>
             <div className="containerBtn">
               <Button

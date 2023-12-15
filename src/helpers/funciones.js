@@ -78,7 +78,7 @@ export const calcularValorTotalCondDescuento = (check, cantDias, valorNoche) => 
     const valorTotal = cantDias * valorNoche
     
     if(check){
-        const descuento = 0.3
+        const descuento = 0.2
         const valorDescuento = valorTotal*descuento
         const valorTotalConDescuento = valorTotal-valorDescuento
         return valorTotalConDescuento
