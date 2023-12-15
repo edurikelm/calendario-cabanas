@@ -56,6 +56,21 @@ const ModalForm = ({ open, handleClose, infoSelected, getEventos, recuperarIngre
     handleClose();
     getEventos();
     recuperarIngresoTotal()
+    setDataInput({
+      title: '',
+      start: '',
+      end: '',
+      cabana: '',
+      cantPersonas: 0,
+      celular: '',
+      correo: '',
+      ubicacion: '',
+      valorNoche: '',
+      pago: false,
+      cantDias: 0,
+      descuento: false,
+      valorTotal: 0
+  })
   };
 
   const handleInputChange = (e) => {
@@ -73,11 +88,49 @@ const ModalForm = ({ open, handleClose, infoSelected, getEventos, recuperarIngre
 
   }
 
+  const limpiarEstadoModal = () => {
+    if(!open){
+      return setDataInput({
+        title: '',
+        start: '',
+        end: '',
+        cabana: '',
+        cantPersonas: 0,
+        celular: '',
+        correo: '',
+        ubicacion: '',
+        valorNoche: '',
+        pago: false,
+        cantDias: 0,
+        descuento: false,
+        valorTotal: 0
+      })
+    }
+
+    return
+  }
+
   useEffect(() => {
     
     setDataInput({...dataInput, cantDias: cantidadDiasArriendo(infoSelected.fechaInicio, infoSelected.fechaTermino), start: infoSelected.fechaInicio, end: infoSelected.fechaTermino, valorTotal: calcularValorTotalCondDescuento(dataInput.descuento, dataInput.cantDias, dataInput.valorNoche)})
-    
-  }, [infoSelected.fechaInicio, infoSelected.fechaTermino, dataInput.descuento, dataInput.cantDias, dataInput.valorNoche])
+    if(!open){
+      return setDataInput({
+        title: '',
+        start: '',
+        end: '',
+        cabana: '',
+        cantPersonas: 0,
+        celular: '',
+        correo: '',
+        ubicacion: '',
+        valorNoche: '',
+        pago: false,
+        cantDias: 0,
+        descuento: false,
+        valorTotal: 0
+      })
+    }
+  }, [infoSelected.fechaInicio, infoSelected.fechaTermino, dataInput.descuento, dataInput.cantDias, dataInput.valorNoche, open])
 
   return (
     <div>
