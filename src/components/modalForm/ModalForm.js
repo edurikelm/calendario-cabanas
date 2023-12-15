@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Box,
   Button,
+  Checkbox,
   FormControl,
   InputLabel,
   MenuItem,
@@ -11,7 +12,7 @@ import {
   Typography,
 } from '@mui/material';
 import { postArriendo } from '../../helpers/funcionesFirebase';
-import { cantidadDiasArriendo } from '../../helpers/funciones';
+import { calcularValorTotalCondDescuento, cantidadDiasArriendo } from '../../helpers/funciones';
 
 const style = {
   position: 'absolute',
@@ -26,41 +27,42 @@ const style = {
 };
 
 const ModalForm = ({ open, handleClose, infoSelected, getEventos, recuperarIngresoTotal }) => {
-  const [arrendantario, setArrendantario] = useState('');
-  const [cabana, setCabana] = useState('');
-  const [cantPersonas, setCantPersonas] = useState(0);
-  const [celular, setCelular] = useState('');
-  const [correo, setCorreo] = useState('');
-  const [ubicacion, setUbicacion] = useState('');
-  const [valorNoche, setValorNoche] = useState(0);
+  
+  const [dataInput, setDataInput] = useState({
+      title: '',
+      start: '',
+      end: '',
+      cabana: '',
+      cantPersonas: 0,
+      celular: '',
+      correo: '',
+      ubicacion: '',
+      valorNoche: '',
+      pago: false,
+      cantDias: 0,
+      descuento: false,
+      valorTotal: 0
+  });
+
   const [error, setError] = useState('');
 
   const handleNuevoBtn = async () => {
-    if (cabana === '') {
+
+    if (dataInput.cabana === '') {
       return setError('Debe seleccionar una cabana');
     }
-    const data = {
-      title: arrendantario,
-      start: infoSelected.fechaInicio,
-      end: infoSelected.fechaTermino,
-      cabana: cabana,
-      cantPersonas: cantPersonas,
-      celular: celular,
-      correo: correo,
-      ubicacion: ubicacion,
-      valorNoche: valorNoche,
-      pago: false,
-      cantDias: cantidadDiasArriendo(infoSelected.fechaInicio, infoSelected.fechaTermino)
-    };
 
-    await postArriendo(data);
+    await postArriendo(dataInput);
     handleClose();
     getEventos();
     recuperarIngresoTotal()
   };
 
-  const handleChangeCabana = (e) => {
-    setCabana(e.target.value)
+  const handleInputChange = (e) => {
+    setDataInput({
+      ...dataInput,
+      [e.target.name]: e.target.value
+    })
     setError('')
   }
 
@@ -70,6 +72,12 @@ const ModalForm = ({ open, handleClose, infoSelected, getEventos, recuperarIngre
     )
 
   }
+
+  useEffect(() => {
+    
+    setDataInput({...dataInput, cantDias: cantidadDiasArriendo(infoSelected.fechaInicio, infoSelected.fechaTermino), start: infoSelected.fechaInicio, end: infoSelected.fechaTermino, valorTotal: calcularValorTotalCondDescuento(dataInput.descuento, dataInput.cantDias, dataInput.valorNoche)})
+    
+  }, [infoSelected.fechaInicio, infoSelected.fechaTermino, dataInput.descuento, dataInput.cantDias, dataInput.valorNoche])
 
   return (
     <div>
@@ -92,8 +100,9 @@ const ModalForm = ({ open, handleClose, infoSelected, getEventos, recuperarIngre
                 variant="standard"
                 type="text"
                 label="Arrendatario"
-                onChange={(e) => setArrendantario(e.target.value)}
-                value={arrendantario}
+                onChange={handleInputChange}
+                value={dataInput.arrendantario}
+                name='title'
               />
             </FormControl>
             <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
@@ -104,6 +113,7 @@ const ModalForm = ({ open, handleClose, infoSelected, getEventos, recuperarIngre
                 label="Fecha Entrada"
                 disabled
                 value={infoSelected.fechaInicio}
+                name='start'
               />
             </FormControl>
             <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
@@ -114,6 +124,7 @@ const ModalForm = ({ open, handleClose, infoSelected, getEventos, recuperarIngre
                 label="Fecha Salida"
                 disabled
                 value={infoSelected.fechaTermino}
+                name='end'
               />
             </FormControl>
             <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
@@ -123,9 +134,10 @@ const ModalForm = ({ open, handleClose, infoSelected, getEventos, recuperarIngre
               <Select
                 labelId="demo-simple-select-standard-label"
                 id="demo-simple-select-standard"
-                value={cabana}
-                onChange={handleChangeCabana}
+                value={dataInput.cabana}
+                onChange={handleInputChange}
                 label="Age"
+                name='cabana'
               >
                 <MenuItem value="Regional Uno">Regional Uno</MenuItem>
                 <MenuItem value="Regional Dos">Regional Dos</MenuItem>
@@ -143,8 +155,9 @@ const ModalForm = ({ open, handleClose, infoSelected, getEventos, recuperarIngre
                 variant="standard"
                 type="number"
                 label="Cant. Personas"
-                onChange={(e) => setCantPersonas(e.target.value)}
-                value={cantPersonas}
+                onChange={handleInputChange}
+                value={dataInput.cantPersonas}
+                name='cantPersonas'
               />
             </FormControl>
             <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
@@ -153,8 +166,9 @@ const ModalForm = ({ open, handleClose, infoSelected, getEventos, recuperarIngre
                 variant="standard"
                 type="text"
                 label="Celular"
-                onChange={(e) => setCelular(e.target.value)}
-                value={celular}
+                onChange={handleInputChange}
+                value={dataInput.celular}
+                name='celular'
               />
             </FormControl>
             <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
@@ -163,8 +177,9 @@ const ModalForm = ({ open, handleClose, infoSelected, getEventos, recuperarIngre
                 variant="standard"
                 type="email"
                 label="Correo"
-                onChange={(e) => setCorreo(e.target.value)}
-                value={correo}
+                onChange={handleInputChange}
+                value={dataInput.correo}
+                name='correo'
               />
             </FormControl>
             <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
@@ -173,8 +188,9 @@ const ModalForm = ({ open, handleClose, infoSelected, getEventos, recuperarIngre
                 variant="standard"
                 type="text"
                 label="Ubicacion"
-                onChange={(e) => setUbicacion(e.target.value)}
-                value={ubicacion}
+                onChange={handleInputChange}
+                value={dataInput.ubicacion}
+                name='ubicacion'
               />
             </FormControl>
             <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
@@ -183,9 +199,14 @@ const ModalForm = ({ open, handleClose, infoSelected, getEventos, recuperarIngre
                 variant="standard"
                 type="number"
                 label="Precio x Noche"
-                onChange={(e) => setValorNoche(e.target.value)}
-                value={valorNoche}
+                onChange={handleInputChange}
+                value={dataInput.valorNoche}
+                name='valorNoche'
               />
+            </FormControl>
+            <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }} style={{display: 'flex', flexDirection:'row', justifyContent:'center', alignItems:'center'}}>
+            <Checkbox onChange={() => !dataInput.descuento ? setDataInput({...dataInput, descuento:true}) : setDataInput({...dataInput, descuento:false})}/>
+            <label htmlFor="">30% Gringo</label>
             </FormControl>
             <div className="containerBtn">
               <Button

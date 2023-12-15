@@ -125,6 +125,9 @@ const Calendario = () => {
                 correo: info.event._def.extendedProps.correo,
                 celular: info.event._def.extendedProps.celular,
                 pago: info.event._def.extendedProps.pago,
+                descuento: info.event._def.extendedProps.descuento,
+                valorTotal: info.event._def.extendedProps.valorTotal,
+                cantDias: info.event._def.extendedProps.cantDias
               });
             }}
           />

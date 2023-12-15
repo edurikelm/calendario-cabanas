@@ -32,8 +32,8 @@ const Detalle = ({ selectEvent, getEventos, setSelectEvent, recuperarIngresoTota
 
   const valorxNoche = formatoPesos(selectEvent.valorNoche)
   const diasArriendo = cantidadDiasArriendo(selectEvent.start, selectEvent.end)
-  const costoTotalArriendo = formatoPesos(selectEvent.valorNoche * diasArriendo)
-  
+  const costoTotalArriendo = formatoPesos(selectEvent.valorTotal)
+
   const cambiarPago = (estado) => {
     editArriendo(selectEvent.id, {pago: estado})
     setSelectEvent({...selectEvent, pago: estado})

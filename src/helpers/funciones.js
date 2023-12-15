@@ -72,3 +72,17 @@ export const sumarIngresos = async () => {
     const reduceData = dataValorNoche.reduce((a,b) => a + b, suma )
     return reduceData
 }
+
+export const calcularValorTotalCondDescuento = (check, cantDias, valorNoche) => {
+    
+    const valorTotal = cantDias * valorNoche
+    
+    if(check){
+        const descuento = 0.3
+        const valorDescuento = valorTotal*descuento
+        const valorTotalConDescuento = valorTotal-valorDescuento
+        return valorTotalConDescuento
+    }
+
+    return valorTotal
+}
