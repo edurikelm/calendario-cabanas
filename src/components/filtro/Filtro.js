@@ -1,3 +1,4 @@
+import { cabanas } from "../../helpers/constantes";
 import { ordenarDataArriendos } from "../../helpers/funciones";
 import { getArriendosPorCabana } from "../../helpers/funcionesFirebase";
 
@@ -9,16 +10,15 @@ const Filtro = ({setEventos}) => {
     setEventos(ordenarDataArriendos(cabanasFiltradas))
   }
 
+ 
 
   return (
     <div>
       <select name="filtro" onChange={handleChangeOption}>
         <option value="Todos">Todos</option>
-        <option value="Regional Uno">Regional Uno</option>
-        <option value="Regional Dos">Regional Dos</option>
-        <option value="Regional Tres">Regional Tres</option>
-        <option value="Teja Uno">Teja Uno</option>
-        <option value="Teja Dos">Teja Dos</option>
+        {
+          cabanas.map((item, index) => (<option key={index} value={item}>{item}</option>))
+        }
       </select>
     </div>
   );

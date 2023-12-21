@@ -12,7 +12,13 @@ import {
   Typography,
 } from '@mui/material';
 import { postArriendo } from '../../helpers/funcionesFirebase';
-import { calcularValorTotalCondDescuento, cantidadDiasArriendo } from '../../helpers/funciones';
+import {
+  calcularValorTotalCondDescuento,
+  cantidadDiasArriendo,
+} from '../../helpers/funciones';
+import { cabanas } from '../../helpers/constantes';
+
+import 'react-datepicker/dist/react-datepicker.css';
 
 const style = {
   position: 'absolute',
@@ -26,28 +32,32 @@ const style = {
   p: 4,
 };
 
-const ModalForm = ({ open, handleClose, infoSelected, getEventos, recuperarIngresoTotal }) => {
-  
+const ModalForm = ({
+  open,
+  handleClose,
+  infoSelected,
+  getEventos,
+  recuperarIngresoTotal,
+  setSelectEvent
+}) => {
   const [dataInput, setDataInput] = useState({
-      title: '',
-      start: '',
-      end: '',
-      cabana: '',
-      cantPersonas: 0,
-      celular: '',
-      correo: '',
-      ubicacion: '',
-      valorNoche: '',
-      pago: false,
-      cantDias: 0,
-      descuento: false,
-      valorTotal: 0
+    title: '',
+    start: '',
+    end: '',
+    cabana: '',
+    cantPersonas: 0,
+    celular: '',
+    ubicacion: '',
+    valorNoche: '',
+    pago: false,
+    cantDias: 0,
+    descuento: false,
+    valorTotal: 0,
   });
 
   const [error, setError] = useState('');
 
   const handleNuevoBtn = async () => {
-
     if (dataInput.cabana === '') {
       return setError('Debe seleccionar una cabana');
     }
@@ -55,7 +65,8 @@ const ModalForm = ({ open, handleClose, infoSelected, getEventos, recuperarIngre
     await postArriendo(dataInput);
     handleClose();
     getEventos();
-    recuperarIngresoTotal()
+    recuperarIngresoTotal();
+    setSelectEvent({})
     setDataInput({
       title: '',
       start: '',
@@ -63,57 +74,43 @@ const ModalForm = ({ open, handleClose, infoSelected, getEventos, recuperarIngre
       cabana: '',
       cantPersonas: 0,
       celular: '',
-      correo: '',
       ubicacion: '',
       valorNoche: '',
       pago: false,
       cantDias: 0,
       descuento: false,
-      valorTotal: 0
-  })
+      valorTotal: 0,
+    });
   };
 
   const handleInputChange = (e) => {
     setDataInput({
       ...dataInput,
-      [e.target.name]: e.target.value
-    })
-    setError('')
-  }
+      [e.target.name]: e.target.value,
+    });
+    setError('');
+  };
 
   const MsgError = () => {
-    return(
-      <span style={{color: 'red'}}>{error}</span>
-    )
-
-  }
-
-  const limpiarEstadoModal = () => {
-    if(!open){
-      return setDataInput({
-        title: '',
-        start: '',
-        end: '',
-        cabana: '',
-        cantPersonas: 0,
-        celular: '',
-        correo: '',
-        ubicacion: '',
-        valorNoche: '',
-        pago: false,
-        cantDias: 0,
-        descuento: false,
-        valorTotal: 0
-      })
-    }
-
-    return
-  }
+    return <span style={{ color: 'red' }}>{error}</span>;
+  };
 
   useEffect(() => {
-    
-    setDataInput({...dataInput, cantDias: cantidadDiasArriendo(infoSelected.fechaInicio, infoSelected.fechaTermino), start: infoSelected.fechaInicio, end: infoSelected.fechaTermino, valorTotal: calcularValorTotalCondDescuento(dataInput.descuento, dataInput.cantDias, dataInput.valorNoche)})
-    if(!open){
+    setDataInput({
+      ...dataInput,
+      cantDias: cantidadDiasArriendo(
+        infoSelected.fechaInicio,
+        infoSelected.fechaTermino
+      ) + 1,
+      start: infoSelected.fechaInicio,
+      end: infoSelected.fechaTermino,
+      valorTotal: calcularValorTotalCondDescuento(
+        dataInput.descuento,
+        dataInput.cantDias,
+        dataInput.valorNoche
+      ),
+    });
+    if (!open) {
       return setDataInput({
         title: '',
         start: '',
@@ -121,16 +118,22 @@ const ModalForm = ({ open, handleClose, infoSelected, getEventos, recuperarIngre
         cabana: '',
         cantPersonas: 0,
         celular: '',
-        correo: '',
         ubicacion: '',
         valorNoche: '',
         pago: false,
         cantDias: 0,
         descuento: false,
-        valorTotal: 0
-      })
+        valorTotal: 0,
+      });
     }
-  }, [infoSelected.fechaInicio, infoSelected.fechaTermino, dataInput.descuento, dataInput.cantDias, dataInput.valorNoche, open])
+  }, [
+    infoSelected.fechaInicio,
+    infoSelected.fechaTermino,
+    dataInput.descuento,
+    dataInput.cantDias,
+    dataInput.valorNoche,
+    open,
+  ]);
 
   return (
     <div>
@@ -155,7 +158,7 @@ const ModalForm = ({ open, handleClose, infoSelected, getEventos, recuperarIngre
                 label="Arrendatario"
                 onChange={handleInputChange}
                 value={dataInput.arrendantario}
-                name='title'
+                name="title"
               />
             </FormControl>
             <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
@@ -163,10 +166,10 @@ const ModalForm = ({ open, handleClose, infoSelected, getEventos, recuperarIngre
                 size="small"
                 variant="standard"
                 type="text"
-                label="Fecha Entrada"
+                label="Desde"
                 disabled
-                value={infoSelected.fechaInicio}
-                name='start'
+                value={new Date(infoSelected.fechaInicio).toLocaleDateString()}
+                name="start"
               />
             </FormControl>
             <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
@@ -174,10 +177,10 @@ const ModalForm = ({ open, handleClose, infoSelected, getEventos, recuperarIngre
                 size="small"
                 variant="standard"
                 type="text"
-                label="Fecha Salida"
+                label="Hasta"
                 disabled
-                value={infoSelected.fechaTermino}
-                name='end'
+                value={new Date(infoSelected.fechaTermino).toLocaleDateString()}
+                name="end"
               />
             </FormControl>
             <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
@@ -190,18 +193,16 @@ const ModalForm = ({ open, handleClose, infoSelected, getEventos, recuperarIngre
                 value={dataInput.cabana}
                 onChange={handleInputChange}
                 label="Age"
-                name='cabana'
+                name="cabana"
               >
-                <MenuItem value="Regional Uno">Regional Uno</MenuItem>
-                <MenuItem value="Regional Dos">Regional Dos</MenuItem>
-                <MenuItem value="Regional Tres">Regional Tres</MenuItem>
-                <MenuItem value="Regional Cuatro">Regional Cuatro</MenuItem>
-                <MenuItem value="Teja Uno">Teja Uno</MenuItem>
-                <MenuItem value="Teja Dos">Teja Dos</MenuItem>
-                <MenuItem value="Teja Tres">Teja Tres</MenuItem>
+                {cabanas.map((cabana, index) => (
+                  <MenuItem key={index} value={cabana}>
+                    {cabana}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
-            <MsgError/>
+            <MsgError />
             <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
               <TextField
                 size="small"
@@ -210,7 +211,7 @@ const ModalForm = ({ open, handleClose, infoSelected, getEventos, recuperarIngre
                 label="Cant. Personas"
                 onChange={handleInputChange}
                 value={dataInput.cantPersonas}
-                name='cantPersonas'
+                name="cantPersonas"
               />
             </FormControl>
             <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
@@ -221,18 +222,7 @@ const ModalForm = ({ open, handleClose, infoSelected, getEventos, recuperarIngre
                 label="Celular"
                 onChange={handleInputChange}
                 value={dataInput.celular}
-                name='celular'
-              />
-            </FormControl>
-            <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-              <TextField
-                size="small"
-                variant="standard"
-                type="email"
-                label="Correo"
-                onChange={handleInputChange}
-                value={dataInput.correo}
-                name='correo'
+                name="celular"
               />
             </FormControl>
             <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
@@ -243,7 +233,7 @@ const ModalForm = ({ open, handleClose, infoSelected, getEventos, recuperarIngre
                 label="Ubicacion"
                 onChange={handleInputChange}
                 value={dataInput.ubicacion}
-                name='ubicacion'
+                name="ubicacion"
               />
             </FormControl>
             <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
@@ -254,12 +244,27 @@ const ModalForm = ({ open, handleClose, infoSelected, getEventos, recuperarIngre
                 label="Precio x Noche"
                 onChange={handleInputChange}
                 value={dataInput.valorNoche}
-                name='valorNoche'
+                name="valorNoche"
               />
             </FormControl>
-            <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }} style={{display: 'flex', flexDirection:'row', justifyContent:'center', alignItems:'center'}}>
-            <Checkbox onChange={() => !dataInput.descuento ? setDataInput({...dataInput, descuento:true}) : setDataInput({...dataInput, descuento:false})}/>
-            <label htmlFor="">20% Gringo</label>
+            <FormControl
+              variant="standard"
+              sx={{ m: 1, minWidth: 120 }}
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <Checkbox
+                onChange={() =>
+                  !dataInput.descuento
+                    ? setDataInput({ ...dataInput, descuento: true })
+                    : setDataInput({ ...dataInput, descuento: false })
+                }
+              />
+              <label htmlFor="">20% Gringo</label>
             </FormControl>
             <div className="containerBtn">
               <Button

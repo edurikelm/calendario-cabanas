@@ -13,7 +13,7 @@ import ModalForm from '../modalForm/ModalForm';
 import Filtro from '../filtro/Filtro';
 // import { sumarDias } from '../../helpers/funciones'
 import { editArriendo, getArriendos } from '../../helpers/funcionesFirebase';
-import { ordenarDataArriendos, sumarIngresos } from '../../helpers/funciones';
+import { calcularValorTotalCondDescuento, cantidadDiasArriendo, ordenarDataArriendos, sumarIngresos } from '../../helpers/funciones';
 
 const Calendario = () => {
   const [infoSelected, setInfoSelected] = useState({
@@ -32,18 +32,21 @@ const Calendario = () => {
   const getEventos = async () => {
     const data = await getArriendos();
     const nuevaData = ordenarDataArriendos(data);
-    setEventos(nuevaData);
+    const nuevadataFecha = nuevaData.map((item) => ({...item, start: new Date(item.start).toISOString().slice(0,10), end: new Date(item.end).toISOString().slice(0,10)}))
+    // return console.log(nuevadataFecha)
+    setEventos(nuevadataFecha);
   };
-
+  
   const recuperarIngresoTotal = async () => {
     const valor = await sumarIngresos()
     return setIngresoTotal(valor)
   }
-
+  
   useEffect(() => {
     getEventos();
     recuperarIngresoTotal()
   }, []);
+
 
   return (
     <>
@@ -64,6 +67,7 @@ const Calendario = () => {
             infoSelected={infoSelected}
             getEventos={getEventos}
             recuperarIngresoTotal={recuperarIngresoTotal}
+            setSelectEvent={setSelectEvent}
           />
           <FullCalender
             events={eventos}
@@ -83,26 +87,43 @@ const Calendario = () => {
                 buttonText: 'Lista',
               },
             }}
-            eventDrop={async (info) => {
+            eventChange={async (info) => {
+              const cantDias = cantidadDiasArriendo(info.event.startStr,info.event.endStr)
+              const valTotal= calcularValorTotalCondDescuento(info.event.extendedProps.descuento, cantDias, info.event.extendedProps.valorNoche)
               const data = {
-                start: info.event.startStr,
-                end: info.event.endStr,
+                id: info.event.id,
+                start: new Date(info.event.start).toISOString().slice(0,10),
+                end: new Date(info.event.end).toISOString().slice(0,10),
+                cantDias: cantDias,
+                valorTotal: valTotal
               };
 
               await editArriendo(info.event.id, data);
               getEventos();
+              setSelectEvent({})
+              recuperarIngresoTotal()
             }}
+            // eventDrop={async (info) => {
+            //   const data = {
+            //     start: new Date(info.event.startStr).toISOString().slice(0,10),
+            //     end: new Date(info.event.endStr).toISOString().slice(0,10),
+            //   };
+
+            //   await editArriendo(info.event.id, data);
+            //   getEventos();
+            //   recuperarIngresoTotal()
+            // }}
             select={(info) => {
               handleOpen();
               setInfoSelected({
-                fechaInicio: info.startStr,
-                fechaTermino: info.endStr,
+                fechaInicio: new Date(info.start).toString(),
+                fechaTermino: format(info.end, 'yyyy-MM-dd'),
               });
             }}
             eventClick={(info) => {
-              // console.log(info.event);
-              // const fechaFinal = sumarDias(info.event.end)
-              const fecha = format(info.event.end, 'yyyy-MM-dd');
+              const fechaInicial = new Date(info.event.start).toISOString();
+              // console.log(new Date(fechaInicial))
+              const fechaFinal = format(info.event.end, 'yyyy-MM-dd');
               let nuevoArreglo = [];
               const tituloCabanaArreglo = info.event.title.split(' ');
               tituloCabanaArreglo.length = tituloCabanaArreglo.length - 2;
@@ -116,8 +137,8 @@ const Calendario = () => {
               setSelectEvent({
                 id: info.event.id,
                 title: nuevaTitlo,
-                start: info.event.startStr,
-                end: fecha,
+                start: fechaInicial,
+                end: fechaFinal,
                 valorNoche: info.event._def.extendedProps.valorNoche,
                 cabana: info.event._def.extendedProps.cabana,
                 ubicacion: info.event._def.extendedProps.ubicacion,

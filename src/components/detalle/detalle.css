@@ -41,15 +41,26 @@
     align-items: center;
 }
 
-.constoTotal{
+.costosContainer{
+    display: flex;
+    flex-direction: column;
     background-color: #eceffd;
     margin: 20px 0;
-    height: 30px;
+    height: 90px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 5px;
     border-radius: 10px;
+}
+
+.constoTotal{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 100%;
 }
 
 .cantPersonas{
