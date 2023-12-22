@@ -1,13 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import {
   Box,
   Button,
   Checkbox,
   FormControl,
-  InputLabel,
-  MenuItem,
   Modal,
-  Select,
   TextField,
   Typography,
 } from '@mui/material';
@@ -16,9 +13,10 @@ import {
   calcularValorTotalCondDescuento,
   cantidadDiasArriendo,
 } from '../../helpers/funciones';
-import { cabanas } from '../../helpers/constantes';
 
 import 'react-datepicker/dist/react-datepicker.css';
+import { ListaCabanas } from '../listaCabanas/ListaCabanas';
+import { useForm } from '../../hooks/useForm';
 
 const style = {
   position: 'absolute',
@@ -40,7 +38,7 @@ const ModalForm = ({
   recuperarIngresoTotal,
   setSelectEvent
 }) => {
-  const [dataInput, setDataInput] = useState({
+  const {error, setError, handleInputChange, dataInput, setDataInput, resetInput} = useForm({
     title: '',
     start: '',
     end: '',
@@ -53,9 +51,7 @@ const ModalForm = ({
     cantDias: 0,
     descuento: false,
     valorTotal: 0,
-  });
-
-  const [error, setError] = useState('');
+  })
 
   const handleNuevoBtn = async () => {
     if (dataInput.cabana === '') {
@@ -67,28 +63,7 @@ const ModalForm = ({
     getEventos();
     recuperarIngresoTotal();
     setSelectEvent({})
-    setDataInput({
-      title: '',
-      start: '',
-      end: '',
-      cabana: '',
-      cantPersonas: 0,
-      celular: '',
-      ubicacion: '',
-      valorNoche: '',
-      pago: false,
-      cantDias: 0,
-      descuento: false,
-      valorTotal: 0,
-    });
-  };
-
-  const handleInputChange = (e) => {
-    setDataInput({
-      ...dataInput,
-      [e.target.name]: e.target.value,
-    });
-    setError('');
+    resetInput()
   };
 
   const MsgError = () => {
@@ -111,20 +86,7 @@ const ModalForm = ({
       ),
     });
     if (!open) {
-      return setDataInput({
-        title: '',
-        start: '',
-        end: '',
-        cabana: '',
-        cantPersonas: 0,
-        celular: '',
-        ubicacion: '',
-        valorNoche: '',
-        pago: false,
-        cantDias: 0,
-        descuento: false,
-        valorTotal: 0,
-      });
+      return resetInput()
     }
   }, [
     infoSelected.fechaInicio,
@@ -184,23 +146,7 @@ const ModalForm = ({
               />
             </FormControl>
             <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-              <InputLabel id="demo-simple-select-standard-label">
-                Cabaña
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-standard-label"
-                id="demo-simple-select-standard"
-                value={dataInput.cabana}
-                onChange={handleInputChange}
-                label="Age"
-                name="cabana"
-              >
-                {cabanas.map((cabana, index) => (
-                  <MenuItem key={index} value={cabana}>
-                    {cabana}
-                  </MenuItem>
-                ))}
-              </Select>
+              <ListaCabanas dataInput={dataInput} handleInputChange={handleInputChange} />
             </FormControl>
             <MsgError />
             <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>

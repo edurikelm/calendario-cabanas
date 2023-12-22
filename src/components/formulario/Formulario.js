@@ -1,71 +1,64 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { TextField, Button, Typography, IconButton, Checkbox, FormControl } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 import { editArriendo } from '../../helpers/funcionesFirebase'
 import './formulario.css'
 import { calcularValorTotalCondDescuento, cantidadDiasArriendo } from '../../helpers/funciones'
 import { DatePicker } from '@mui/x-date-pickers'
+import { ListaCabanas } from '../listaCabanas/ListaCabanas'
+import { useForm } from '../../hooks/useForm'
 
 
 const Formulario = ({ selectEvent, getEventos, setEdit, setSelectEvent, recuperarIngresoTotal }) => {
 
-    const [arrendantario, setArrendantario] = useState('');
-    const [fechaInicio, setFechaInicio] = useState(new Date());
-    const [fechaTermino, setFechaTermino] = useState(new Date());
-    const [cabana, setCabana] = useState('');
-    const [cantPersonas, setCantPersonas] = useState(0);
-    const [celular, setCelular] = useState('');
-    // const [correo, setCorreo] = useState('');
-    const [ubicacion, setUbicacion] = useState('');
-    const [id, setId] = useState('');
-    const [pagado, setPagado] = useState('');
-    const [valorNoche, setValorNoche] = useState(0);
-    const [descuento, setDescuento] = useState(false);
+    const {error, setError, handleInputChange, dataInput, setDataInput, resetInput} = useForm({
+        title: '',
+        start: '',
+        end: '',
+        cabana: '',
+        cantPersonas: 0,
+        celular: '',
+        ubicacion: '',
+        valorNoche: '',
+        pago: false,
+        cantDias: 0,
+        descuento: false,
+        valorTotal: 0,
+      })
 
     useEffect(() => {
-        setArrendantario(selectEvent.title)
-        setFechaInicio(new Date(selectEvent.start))
-        setFechaTermino(new Date(selectEvent.end))
-        setCabana(selectEvent.cabana)
-        setCantPersonas(selectEvent.cantPersonas)
-        setCelular(selectEvent.celular)
-        setUbicacion(selectEvent.ubicacion)
-        setValorNoche(selectEvent.valorNoche)
-        // setCorreo(selectEvent.correo)
-        setId(selectEvent.id)
-        setPagado(selectEvent.pago)
-        setDescuento(selectEvent.descuento)
-    }, [selectEvent])
 
-    // console.log(cantidadDiasArriendo(fechaInicio,fechaTermino))
+        setDataInput({...selectEvent, start:new Date(selectEvent.start), end: new Date(selectEvent.end)})
 
+    }, [setDataInput, selectEvent])
+    
     const handleButton = async () => {
 
-        const cantDias = cantidadDiasArriendo(fechaInicio,fechaTermino) + 1
-        const valorTotal = calcularValorTotalCondDescuento(descuento, cantDias, valorNoche)
+        const cantDias = cantidadDiasArriendo(dataInput.start,dataInput.end) + 1
+        const valorTotal = calcularValorTotalCondDescuento(dataInput.descuento, cantDias, dataInput.valorNoche)
         const data = {
-            id: id,
-            title: arrendantario,
-            start: new Date(fechaInicio).toISOString().slice(0,10),
-            end: new Date(fechaTermino).toISOString().slice(0,10),
-            cabana: cabana,
-            cantPersonas: cantPersonas,
-            celular: celular,
+            id: selectEvent.id,
+            title: dataInput.title,
+            start: new Date(dataInput.start).toISOString().slice(0,10),
+            end: new Date(dataInput.end).toISOString().slice(0,10),
+            cabana: dataInput.cabana,
+            cantPersonas: dataInput.cantPersonas,
+            celular: dataInput.celular,
             // correo: correo,
-            pago: pagado,
-            ubicacion: ubicacion,
-            valorNoche: valorNoche,
-            descuento: descuento,
+            pago: dataInput.pago,
+            ubicacion: dataInput.ubicacion,
+            valorNoche: dataInput.valorNoche,
+            descuento: dataInput.descuento,
             cantDias,
             valorTotal
         }
-        console.log(data)
 
         await editArriendo(selectEvent.id, data)
         setSelectEvent({})
         getEventos()
         setEdit(false)
         recuperarIngresoTotal()
+        resetInput()
         // console.log(filterLocal);
     }
 
@@ -78,15 +71,31 @@ const Formulario = ({ selectEvent, getEventos, setEdit, setSelectEvent, recupera
             </div>
             <Typography sx={{ fontSize: 20, fontWeight: 'bold', textAlign: 'center' }}>Editar Arriendo</Typography>
             <div className="containerItem">
-                <TextField size='small' variant="standard" type='text' label='Arrendatario' onChange={e => setArrendantario(e.target.value)} value={arrendantario} />
-                <DatePicker label='Desde' slotProps={{textField:{size:'small'}}} format='dd-MM-yyy' value={fechaInicio} onChange={(date) => setFechaInicio(date)}/>
-                <DatePicker label='Hasta' slotProps={{textField:{size:'small'}}} format='dd-MM-yyy' value={fechaTermino} onChange={(date) => setFechaTermino(date)}/>
-                <TextField size='small' variant="standard" type='text' label='Cabana' onChange={e => setCabana(e.target.value)} value={cabana} />
-                <TextField size='small' variant="standard" type='text' label='Cant. Personas' onChange={e => setCantPersonas(e.target.value)} value={cantPersonas} />
-                <TextField size='small' variant="standard" type='text' label='Celular' onChange={e => setCelular(e.target.value)} value={celular} />
+                <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+                    <TextField size='small' variant="standard" type='text' label='Arrendatario' name='title' onChange={handleInputChange} value={dataInput.title} />
+                </FormControl>
+                <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+                    <DatePicker label='Desde' slotProps={{textField:{size:'small'}}} format='dd-MM-yyy' name='start' value={new Date(selectEvent.start)} onChange={(date) => setDataInput({...dataInput, start:date})}/>
+                </FormControl>
+                <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+                    <DatePicker label='Hasta' slotProps={{textField:{size:'small'}}} format='dd-MM-yyy' name='end' value={new Date(selectEvent.end)} onChange={(date) => setDataInput({...dataInput, end:date})}/>                    
+                </FormControl>
+                <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+                    <ListaCabanas dataInput={dataInput} handleInputChange={handleInputChange} />
+                </FormControl>
+                <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+                    <TextField size='small' variant="standard" type='text' label='Cant. Personas' name='cantPersonas' onChange={handleInputChange} value={dataInput.cantPersonas} />
+                </FormControl>
+                <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+                    <TextField size='small' variant="standard" type='text' label='Celular' name='celular' onChange={handleInputChange} value={dataInput.celular} />
+                </FormControl>
                 {/* <TextField size='small' variant="standard" type='text' label='Correo' onChange={e => setCorreo(e.target.value)} value={correo} /> */}
-                <TextField size='small' variant="standard" type='text' label='Ubicacion' onChange={e => setUbicacion(e.target.value)} value={ubicacion} />
-                <TextField size='small' variant="standard" type='text' label='Precio x Noche' onChange={e => setValorNoche(e.target.value)} value={valorNoche} />
+                <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+                    <TextField size='small' variant="standard" type='text' label='Ubicacion' name='ubicacion' onChange={handleInputChange} value={dataInput.ubicacion} />
+                </FormControl>
+                <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+                    <TextField size='small' variant="standard" type='text' label='Precio x Noche' name='valorNoche' onChange={handleInputChange} value={dataInput.valorNoche} />
+                </FormControl>
                 <FormControl
                     variant="standard"
                     sx={{ m: 1, minWidth: 120 }}
@@ -98,11 +107,11 @@ const Formulario = ({ selectEvent, getEventos, setEdit, setSelectEvent, recupera
                     }}
                     >
                     <Checkbox
-                        checked={descuento}
+                        checked={dataInput.descuento}
                         onChange={() =>
-                        !descuento
-                            ? setDescuento(true)
-                            : setDescuento(false)
+                        !dataInput.descuento
+                            ? setDataInput({...dataInput, descuento:true})
+                            : setDataInput({...dataInput, descuento:false})
                         }
                     />
                     <label htmlFor="">20% Gringo</label>
