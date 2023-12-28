@@ -5,6 +5,7 @@
     width: 300px;
     display: flex;
     border-radius: 10px;
+    justify-content: center;
 }
 
 .headerContainer{
@@ -19,9 +20,6 @@
     align-items: center;
     gap: 10px;
     margin: 10px 0;
-}
-
-.containerInfo{
 }
 
 .containerCheck{

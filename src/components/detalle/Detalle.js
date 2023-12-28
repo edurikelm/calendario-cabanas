@@ -79,6 +79,7 @@ const Detalle = ({
             fontWeight: 'bold',
             margin: 5,
             textAlign: 'center',
+            justifyContent:'center'
           }}
         >
           Seleccione un evento para ver el detalle
@@ -136,18 +137,18 @@ const Detalle = ({
           <Divider />
           <div className="containerCheck">
             <Card className="check">
-              <Typography sx={{ fontSize: 14, opacity: 0.4 }}>
+              <Typography sx={{ fontSize: 14, opacity: 0.5, fontWeight: 'bold' }}>
                 Desde
               </Typography>
-              <Typography sx={{ fontSize: 12, fontWeight: 'bold' }}>
+              <Typography sx={{ fontSize: 15, fontWeight: 'bold' }}>
                 {new Date(selectEvent.start).toLocaleDateString()}
               </Typography>
             </Card>
             <Card className="check">
-              <Typography sx={{ fontSize: 14, opacity: 0.4 }}>
+              <Typography sx={{ fontSize: 14, opacity: 0.5, fontWeight: 'bold' }}>
                 Hasta
               </Typography>
-              <Typography sx={{ fontSize: 12, fontWeight: 'bold' }}>
+              <Typography sx={{ fontSize: 15, fontWeight: 'bold' }}>
                 {new Date(selectEvent.end).toLocaleDateString()}
               </Typography>
             </Card>

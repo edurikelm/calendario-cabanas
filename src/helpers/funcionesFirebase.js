@@ -10,6 +10,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '../firebase';
 import swal from 'sweetalert';
+import { sumarIngresos } from './funciones';
 
 export const postArriendo = async (data) => {
   const nuevoArriendo = await addDoc(collection(db, 'arriendos'), data);
@@ -86,3 +87,19 @@ export const editArriendo = async (id, data) => {
   });
   return res;
 };
+
+export const getTotalIngresosPorMes = async (valor) => {
+  const mes = valor.toLowerCase();
+  const suma = 0;
+
+  if (valor === 'Todos') {
+    return sumarIngresos();
+  } else {
+    const arriendos = await getArriendos()
+    const filtrarArriendos = arriendos.filter(item => new Date(item.start).toLocaleDateString('default', { month: 'long' }) === mes)
+    const mapFiltrarArriendos = filtrarArriendos.map(item => Number(item.valorTotal))
+    const sumarIngresos = mapFiltrarArriendos.reduce((a, b) => a + b, suma)
+
+    return sumarIngresos;
+  }
+}

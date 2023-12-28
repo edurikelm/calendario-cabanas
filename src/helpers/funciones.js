@@ -95,7 +95,7 @@ export const sumarIngresos = async () => {
   const suma = 0;
   const data = await getArriendos();
   const dataValorNoche = data.map(
-    (item) => Number(item.valorNoche) * item.cantDias
+    (item) => Number(item.valorTotal)
   );
   const reduceData = dataValorNoche.reduce((a, b) => a + b, suma);
   return reduceData;

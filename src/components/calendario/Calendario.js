@@ -13,7 +13,12 @@ import ModalForm from '../modalForm/ModalForm';
 import Filtro from '../filtro/Filtro';
 // import { sumarDias } from '../../helpers/funciones'
 import { editArriendo, getArriendos } from '../../helpers/funcionesFirebase';
-import { calcularValorTotalCondDescuento, cantidadDiasArriendo, ordenarDataArriendos, sumarIngresos } from '../../helpers/funciones';
+import {
+  calcularValorTotalCondDescuento,
+  cantidadDiasArriendo,
+  ordenarDataArriendos,
+  sumarIngresos,
+} from '../../helpers/funciones';
 
 const Calendario = () => {
   const [infoSelected, setInfoSelected] = useState({
@@ -32,35 +37,46 @@ const Calendario = () => {
   const getEventos = async () => {
     const data = await getArriendos();
     const nuevaData = ordenarDataArriendos(data);
-    const nuevadataFecha = nuevaData.map((item) => ({...item, start: new Date(item.start).toISOString().slice(0,10), end: new Date(item.end).toISOString().slice(0,10)}))
+    const nuevadataFecha = nuevaData.map((item) => ({
+      ...item,
+      start: new Date(item.start).toISOString().slice(0, 10),
+      end: new Date(item.end).toISOString().slice(0, 10),
+    }));
     // return console.log(nuevadataFecha)
     setEventos(nuevadataFecha);
   };
-  
+
   const recuperarIngresoTotal = async () => {
-    const valor = await sumarIngresos()
-    return setIngresoTotal(valor)
-  }
-  
+    const valor = await sumarIngresos();
+    return setIngresoTotal(valor);
+  };
+
   useEffect(() => {
     getEventos();
-    recuperarIngresoTotal()
+    recuperarIngresoTotal();
   }, []);
-
 
   return (
     <>
       <div className="containerEstadistica">
-        <Card className='cardEstadistica'>
-        <Typography variant="h7" gutterBottom>
-        Total Arriendos
-      </Typography>
-      <Typography variant="h5" component="div">${new Intl.NumberFormat().format(ingresoTotal)}</Typography>
+        <Card
+          className="cardEstadistica"
+          style={{
+            width: 'auto',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-around',
+          }}
+        >
+          <Filtro tipo='Total' setIngresoTotal={setIngresoTotal}/>
+          <Typography sx={{ fontWeight: 'bold', fontSize: 20 }} component="div">
+            ${new Intl.NumberFormat().format(ingresoTotal)}
+          </Typography>
         </Card>
       </div>
       <div className="containerPrincipal">
         <Card className="containerCalender">
-          <Filtro setEventos={setEventos} eventos={eventos} />
+          <Filtro setEventos={setEventos} tipo='Todas las Cabanas'/>
           <ModalForm
             open={open}
             handleClose={handleClose}
@@ -88,20 +104,27 @@ const Calendario = () => {
               },
             }}
             eventChange={async (info) => {
-              const cantDias = cantidadDiasArriendo(info.event.startStr,info.event.endStr)
-              const valTotal= calcularValorTotalCondDescuento(info.event.extendedProps.descuento, cantDias, info.event.extendedProps.valorNoche)
+              const cantDias = cantidadDiasArriendo(
+                info.event.startStr,
+                info.event.endStr
+              );
+              const valTotal = calcularValorTotalCondDescuento(
+                info.event.extendedProps.descuento,
+                cantDias,
+                info.event.extendedProps.valorNoche
+              );
               const data = {
                 id: info.event.id,
-                start: new Date(info.event.start).toISOString().slice(0,10),
-                end: new Date(info.event.end).toISOString().slice(0,10),
+                start: new Date(info.event.start).toISOString().slice(0, 10),
+                end: new Date(info.event.end).toISOString().slice(0, 10),
                 cantDias: cantDias,
-                valorTotal: valTotal
+                valorTotal: valTotal,
               };
 
               await editArriendo(info.event.id, data);
               getEventos();
-              setSelectEvent({})
-              recuperarIngresoTotal()
+              setSelectEvent({});
+              recuperarIngresoTotal();
             }}
             // eventDrop={async (info) => {
             //   const data = {
@@ -148,7 +171,7 @@ const Calendario = () => {
                 pago: info.event._def.extendedProps.pago,
                 descuento: info.event._def.extendedProps.descuento,
                 valorTotal: info.event._def.extendedProps.valorTotal,
-                cantDias: info.event._def.extendedProps.cantDias
+                cantDias: info.event._def.extendedProps.cantDias,
               });
             }}
           />

@@ -11,7 +11,7 @@ import { useForm } from '../../hooks/useForm'
 
 const Formulario = ({ selectEvent, getEventos, setEdit, setSelectEvent, recuperarIngresoTotal }) => {
 
-    const {error, setError, handleInputChange, dataInput, setDataInput, resetInput} = useForm({
+    const {handleInputChange, dataInput, setDataInput, resetInput} = useForm({
         title: '',
         start: '',
         end: '',
