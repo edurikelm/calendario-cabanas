@@ -51,14 +51,14 @@ export const ordenarDataArriendos = (arriendos) => {
           color: '#c828f0',
         });
         break;
-      case 'Regional Uno':
+      case 'Regional Dos':
         data.push({
           ...item,
           title: `${item.title} (${item.cabana})`,
           color: '#1D4E89',
         });
         break;
-      case 'Regional Dos':
+      case 'Regional Tres':
         data.push({
           ...item,
           title: `${item.title} (${item.cabana})`,
@@ -66,7 +66,7 @@ export const ordenarDataArriendos = (arriendos) => {
         });
 
         break;
-      case 'Regional Tres':
+      case 'Regional Cuatro':
         data.push({
           ...item,
           title: `${item.title} (${item.cabana})`,
