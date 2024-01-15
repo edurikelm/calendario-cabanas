@@ -129,7 +129,7 @@ const Detalle = ({
             <Typography sx={{ fontSize: 14, fontWeight: 'bold' }}>
               {selectEvent.cantDias}
             </Typography>
-            <Typography sx={{ fontSize: 14 }}>días /</Typography>
+            <Typography sx={{ fontSize: 14 }}>días </Typography>
             <Typography sx={{ fontSize: 14, fontWeight: 'bold' }}>
               {valorxNoche}
             </Typography>

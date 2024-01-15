@@ -3,6 +3,7 @@ import FullCalender from '@fullcalendar/react';
 import interactionPlugin from '@fullcalendar/interaction';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import listPlugin from '@fullcalendar/list';
+import multiMonthPlugin from '@fullcalendar/multimonth'
 import esLocale from '@fullcalendar/core/locales/es';
 import { format } from 'date-fns';
 
@@ -89,13 +90,13 @@ const Calendario = () => {
             events={eventos}
             editable={true}
             contentHeight="550px"
-            plugins={[interactionPlugin, dayGridPlugin, listPlugin]}
+            plugins={[interactionPlugin, dayGridPlugin, multiMonthPlugin, listPlugin]}
             locale={esLocale}
             selectable={true}
             headerToolbar={{
               left: 'title',
               center: '',
-              right: 'prev,next today dayGridMonth,listaBtn',
+              right: 'prev,next today dayGridMonth,dayGridWeek,multiMonthYear',
             }}
             views={{
               listaBtn: {
