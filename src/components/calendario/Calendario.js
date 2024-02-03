@@ -138,9 +138,10 @@ const Calendario = () => {
             //   recuperarIngresoTotal()
             // }}
             select={(info) => {
+              console.log(info.start)
               handleOpen();
               setInfoSelected({
-                fechaInicio: new Date(info.start).toString(),
+                fechaInicio: format(info.start, 'yyyy-MM-dd'),
                 fechaTermino: format(info.end, 'yyyy-MM-dd'),
               });
             }}

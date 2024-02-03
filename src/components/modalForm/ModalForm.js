@@ -17,6 +17,7 @@ import {
 import 'react-datepicker/dist/react-datepicker.css';
 import { ListaCabanas } from '../listaCabanas/ListaCabanas';
 import { useForm } from '../../hooks/useForm';
+import { format, parseISO } from 'date-fns';
 
 const style = {
   position: 'absolute',
@@ -130,7 +131,7 @@ const ModalForm = ({
                 type="text"
                 label="Desde"
                 disabled
-                value={new Date(infoSelected.fechaInicio).toLocaleDateString()}
+                value={parseISO(infoSelected.fechaInicio).toLocaleDateString()}
                 name="start"
               />
             </FormControl>

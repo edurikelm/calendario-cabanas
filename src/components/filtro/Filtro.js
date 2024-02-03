@@ -13,6 +13,7 @@ const Filtro = ({ setEventos, setIngresoTotal, tipo }) => {
     if(tipo === 'Todas las Cabanas'){
       const cabanasFiltradas = await getArriendosPorCabana(value);
       setEventos(ordenarDataArriendos(cabanasFiltradas));
+      console.log(cabanasFiltradas)
     }else{
       const total = await getTotalIngresosPorMes(value);
       setIngresoTotal(total)
