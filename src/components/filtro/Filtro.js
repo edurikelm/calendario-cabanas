@@ -6,6 +6,7 @@ import { useState } from 'react';
 
 const Filtro = ({ setEventos, setIngresoTotal, tipo }) => {
   const [inputTarget, setInputTarget] = useState('Todos');
+  
 
   const handleChangeOption = async (e) => {
     const value = e.target.value;

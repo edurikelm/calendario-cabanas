@@ -77,7 +77,7 @@ const ModalForm = ({
       cantDias: cantidadDiasArriendo(
         infoSelected.fechaInicio,
         infoSelected.fechaTermino
-      ) + 1,
+      ),
       start: infoSelected.fechaInicio,
       end: infoSelected.fechaTermino,
       valorTotal: calcularValorTotalCondDescuento(

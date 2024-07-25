@@ -20,8 +20,10 @@ export const formatoPesos = (monto) => {
 };
 
 export const cantidadDiasArriendo = (fehcaEntrada, fechaSalida) => {
-  const cantidadDias =
-    differenceInDays(new Date(fechaSalida), new Date(fehcaEntrada));
+  const cantidadDias = differenceInDays(
+    new Date(fechaSalida),
+    new Date(fehcaEntrada)
+  );
   return cantidadDias;
 };
 
@@ -51,6 +53,13 @@ export const ordenarDataArriendos = (arriendos) => {
           color: '#c828f0',
         });
         break;
+      case 'Regional Uno':
+        data.push({
+          ...item,
+          title: `${item.title} (${item.cabana})`,
+          color: '#8a6de0',
+        });
+        break;
       case 'Regional Dos':
         data.push({
           ...item,
@@ -73,14 +82,6 @@ export const ordenarDataArriendos = (arriendos) => {
           color: '#D5C7BC',
         });
         break;
-      case 'Regional Cuatro':
-        data.push({
-          ...item,
-          title: `${item.title} (${item.cabana})`,
-          color: '#489600',
-        });
-        break;
-
       default:
         break;
     }
@@ -94,9 +95,7 @@ export const ordenarDataArriendos = (arriendos) => {
 export const sumarIngresos = async () => {
   const suma = 0;
   const data = await getArriendos();
-  const dataValorNoche = data.map(
-    (item) => Number(item.valorTotal)
-  );
+  const dataValorNoche = data.map((item) => Number(item.valorTotal));
   const reduceData = dataValorNoche.reduce((a, b) => a + b, suma);
   return reduceData;
 };
