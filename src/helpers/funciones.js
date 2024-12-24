@@ -92,14 +92,24 @@ export const ordenarDataArriendos = (arriendos) => {
   return data;
 };
 
-export const sumarIngresos = async () => {
+export const sumarIngresos = async (year) => {
+
   const suma = 0;
   const data = await getArriendos();
-  const dataValorNoche = data.map((item) => Number(item.valorTotal));
+  const dataFilter = data.filter(item => new Date(item.start).getFullYear() === year)
+  const dataValorNoche = dataFilter.map((item) => Number(item.valorTotal));
   const reduceData = dataValorNoche.reduce((a, b) => a + b, suma);
   return reduceData;
 };
 
+export const calcularIngresosPorRagoFecha = async (data) => {
+
+  const suma = 0;
+  const dataFilter = data.filter(item => new Date(item.start))
+  const dataValorNoche = dataFilter.map((item) => Number(item.valorTotal));
+  const reduceData = dataValorNoche.reduce((a, b) => a + b, suma);
+  return reduceData
+}
 export const calcularValorTotalCondDescuento = (
   check,
   cantDias,

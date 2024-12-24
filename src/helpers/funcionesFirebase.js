@@ -10,7 +10,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '../firebase';
 import swal from 'sweetalert';
-import { sumarIngresos } from './funciones';
+import { calcularIngresosPorRagoFecha, sumarIngresos } from './funciones';
 
 export const postArriendo = async (data) => {
   const nuevoArriendo = await addDoc(collection(db, 'arriendos'), data);
@@ -103,3 +103,17 @@ export const getTotalIngresosPorMes = async (valor) => {
     return sumarIngresos;
   }
 }
+
+export const getArriendosPorRagoFecha = async (fechaInicial, fechaTermino) => {
+
+  const inicial = new Date(fechaInicial);
+  const final = new Date(fechaTermino);
+
+  const arrayArriendos = (await getArriendos()).filter(item => new Date(item.start) >= inicial && new Date(item.start) <= final)
+
+  const ingresoTotal = await calcularIngresosPorRagoFecha(arrayArriendos)
+
+  return ingresoTotal;
+
+}
+

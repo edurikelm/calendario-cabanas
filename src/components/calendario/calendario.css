@@ -23,6 +23,18 @@
 }
 
 .cardEstadistica{
-    height: 100%;
-    width: 100px;
+    margin: 10px;   
+    padding: 10px;
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.containerApp{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }

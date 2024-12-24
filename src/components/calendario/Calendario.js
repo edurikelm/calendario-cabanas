@@ -3,23 +3,27 @@ import FullCalender from '@fullcalendar/react';
 import interactionPlugin from '@fullcalendar/interaction';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import listPlugin from '@fullcalendar/list';
-import multiMonthPlugin from '@fullcalendar/multimonth'
+import multiMonthPlugin from '@fullcalendar/multimonth';
 import esLocale from '@fullcalendar/core/locales/es';
 import { format } from 'date-fns';
 
 import './calendario.css';
 import Detalle from '../detalle/Detalle';
-import { Card, Typography } from '@mui/material';
+import { Card, CardContent, Typography } from '@mui/material';
+import { DatePicker } from '@mui/x-date-pickers';
 import ModalForm from '../modalForm/ModalForm';
 import Filtro from '../filtro/Filtro';
-// import { sumarDias } from '../../helpers/funciones'
-import { editArriendo, getArriendos } from '../../helpers/funcionesFirebase';
+import {
+  editArriendo,
+  getArriendos,
+  getArriendosPorRagoFecha,
+} from '../../helpers/funcionesFirebase';
 import {
   calcularValorTotalCondDescuento,
   cantidadDiasArriendo,
   ordenarDataArriendos,
-  sumarIngresos,
 } from '../../helpers/funciones';
+import { grey } from '@mui/material/colors';
 
 const Calendario = () => {
   const [infoSelected, setInfoSelected] = useState({
@@ -35,6 +39,11 @@ const Calendario = () => {
   const [eventos, setEventos] = useState([]);
   const [ingresoTotal, setIngresoTotal] = useState(0);
 
+  const [rangoFecha, setRangoFecha] = useState({
+    inicial: new Date('10-03-2024'),
+    final: new Date('03-03-2025'),
+  });
+
   const getEventos = async () => {
     const data = await getArriendos();
     const nuevaData = ordenarDataArriendos(data);
@@ -43,41 +52,60 @@ const Calendario = () => {
       start: new Date(item.start).toISOString().slice(0, 10),
       end: new Date(item.end).toISOString().slice(0, 10),
     }));
-    // return console.log(nuevadataFecha)
     setEventos(nuevadataFecha);
   };
 
   const recuperarIngresoTotal = async () => {
-    const valor = await sumarIngresos();
+    const valor = await getArriendosPorRagoFecha(
+      rangoFecha.inicial,
+      rangoFecha.final
+    );
+    console.log(valor);
     return setIngresoTotal(valor);
   };
 
   useEffect(() => {
     getEventos();
     recuperarIngresoTotal();
-  }, []);
+  }, [rangoFecha]);
+
+  // console.log(rangoFecha);
 
   return (
-    <>
-      <div className="containerEstadistica">
-        <Card
-          className="cardEstadistica"
-          style={{
-            width: 'auto',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-around',
-          }}
-        >
-          <Filtro tipo='Total' setIngresoTotal={setIngresoTotal}/>
+    <div className="containerApp">
+      <Card className="cardEstadistica">
+        <div style={{ display: 'flex', gap: 20 }}>
+          <DatePicker
+            slotProps={{ textField: { size: 'small' } }}
+            label={'Desde Mes'}
+            views={['month', 'year']}
+            name="inicial"
+            value={rangoFecha.inicial}
+            onChange={(date) => setRangoFecha({ ...rangoFecha, inicial: date })}
+          />
+          -
+          <DatePicker
+            slotProps={{ textField: { size: 'small' } }}
+            label={'Hasta Mes'}
+            views={['month', 'year']}
+            name="final"
+            value={rangoFecha.final}
+            onChange={(date) => setRangoFecha({ ...rangoFecha, final: date })}
+          />
+        </div>
+        {/* <Filtro tipo='Total' setIngresoTotal={setIngresoTotal}/> */}
+        <Card sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 2, padding: 1, backgroundColor: grey[100] }}>
+          <Typography sx={{ fontSize: 20 }} component="div">
+            Total: 
+          </Typography>
           <Typography sx={{ fontWeight: 'bold', fontSize: 20 }} component="div">
             ${new Intl.NumberFormat().format(ingresoTotal)}
           </Typography>
         </Card>
-      </div>
+      </Card>
       <div className="containerPrincipal">
         <Card className="containerCalender">
-          <Filtro setEventos={setEventos} tipo='Todas las Cabanas'/>
+          <Filtro setEventos={setEventos} tipo="Todas las Cabanas" />
           <ModalForm
             open={open}
             handleClose={handleClose}
@@ -90,7 +118,12 @@ const Calendario = () => {
             events={eventos}
             editable={true}
             contentHeight="550px"
-            plugins={[interactionPlugin, dayGridPlugin, multiMonthPlugin, listPlugin]}
+            plugins={[
+              interactionPlugin,
+              dayGridPlugin,
+              multiMonthPlugin,
+              listPlugin,
+            ]}
             locale={esLocale}
             selectable={true}
             headerToolbar={{
@@ -138,7 +171,7 @@ const Calendario = () => {
             //   recuperarIngresoTotal()
             // }}
             select={(info) => {
-              console.log(info.start)
+              console.log(info.start);
               handleOpen();
               setInfoSelected({
                 fechaInicio: format(info.start, 'yyyy-MM-dd'),
@@ -186,7 +219,7 @@ const Calendario = () => {
           recuperarIngresoTotal={recuperarIngresoTotal}
         />
       </div>
-    </>
+    </div>
   );
 };
 
